@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "verify-format": "prettier src/ -c",
+    "ci": "npm-run-all --serial verify-format lint build"
   },
   "dependencies": {
     "next": "15.3.0",
@@ -23,6 +25,7 @@
     "eslint-config-next": "15.3.0",
     "eslint-config-prettier": "10.1.2",
     "npm-check-updates": "17.1.18",
+    "npm-run-all": "4.1.5",
     "prettier": "3.5.3",
     "serve": "14.2.4",
     "tailwindcss": "4.1.3",
