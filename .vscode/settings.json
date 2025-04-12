@@ -1,8 +1,5 @@
 {
   "editor.formatOnSave": true,
   "extensions.ignoreRecommendations": false,
-  "[json]": {
-    "editor.formatOnSave": true
-  },
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
