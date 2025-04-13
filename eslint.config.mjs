@@ -13,7 +13,7 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 
   {
-    files: ['**/*.js', '**/*.ts', '**/*.jsx', '**/*.tsx'],
+    files: ['**/*.js', '**/*.ts', '**/*.jsx', '**/*.tsx', '**/*.mjs'],
     rules: {
       'no-warning-comments': [
         'warn',
