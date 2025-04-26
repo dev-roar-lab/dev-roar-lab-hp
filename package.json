@@ -10,7 +10,9 @@
     "verify-format": "prettier src/ -c",
     "ci": "npm-run-all --serial verify-format lint build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "next": "15.3.0",
@@ -37,6 +39,8 @@
     "eslint-config-next": "15.3.0",
     "eslint-config-prettier": "10.1.2",
     "eslint-plugin-storybook": "0.12.0",
+    "husky": "8.0.3",
+    "lint-staged": "15.5.1",
     "npm-check-updates": "17.1.18",
     "npm-run-all": "4.1.5",
     "playwright": "1.51.1",
