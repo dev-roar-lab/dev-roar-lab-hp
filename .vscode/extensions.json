@@ -1,3 +1,8 @@
 {
-  "recommendations": ["esbenp.prettier-vscode", "Gruntfuggly.todo-tree", "wayou.vscode-todo-highlight"]
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "Gruntfuggly.todo-tree",
+    "wayou.vscode-todo-highlight",
+    "bradlc.vscode-tailwindcss"
+  ]
 }
