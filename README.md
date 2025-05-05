@@ -1,5 +1,9 @@
 # dev-roar-lab-hp
 
+## ディレクトリ構成
+
+[screaming-architecture](https://dev.to/profydev/screaming-architecture-evolution-of-a-react-folder-structure-4g25)を参考にしつつ、next-intlで多言語対応を行っています。
+
 ## コミットメッセージルール
 
 コミットメッセージは以下フォーマットです。
