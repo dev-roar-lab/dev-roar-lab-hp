@@ -1,15 +1,17 @@
-import { BlogPosts } from '@/components/posts'
+// TODO ディレクトリとファイル粒度を決めてから実装
 
-export const metadata = {
-  title: 'Blog',
-  description: 'Read my blog.'
-}
+// import { BlogPosts } from '@/components/posts'
 
-export default function Page() {
-  return (
-    <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">My Blog</h1>
-      <BlogPosts />
-    </section>
-  )
-}
+// export const metadata = {
+//   title: 'Blog',
+//   description: 'Read my blog.'
+// }
+
+// export default function Page() {
+//   return (
+//     <section>
+//       <h1 className="font-semibold text-2xl mb-8 tracking-tighter">My Blog</h1>
+//       <BlogPosts />
+//     </section>
+//   )
+// }

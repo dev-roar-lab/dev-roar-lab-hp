@@ -1,17 +1,19 @@
-import { getBlogPosts } from '@/app/[locale]/blog/utils'
+// TODO ディレクトリとファイル粒度を決めてから実装
 
-export const baseUrl = 'https://portfolio-blog-starter.vercel.app'
+// import { getBlogPosts } from '@/app/[locale]/blog/utils'
 
-export default async function sitemap() {
-  const blogs = getBlogPosts().map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: post.metadata.publishedAt
-  }))
+// export const baseUrl = 'https://portfolio-blog-starter.vercel.app'
 
-  const routes = ['', '/blog'].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString().split('T')[0]
-  }))
+// export default async function sitemap() {
+//   const blogs = getBlogPosts().map((post) => ({
+//     url: `${baseUrl}/blog/${post.slug}`,
+//     lastModified: post.metadata.publishedAt
+//   }))
 
-  return [...routes, ...blogs]
-}
+//   const routes = ['', '/blog'].map((route) => ({
+//     url: `${baseUrl}${route}`,
+//     lastModified: new Date().toISOString().split('T')[0]
+//   }))
+
+//   return [...routes, ...blogs]
+// }

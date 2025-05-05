@@ -2,11 +2,11 @@ import './global.css'
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
-import { Navbar } from '@/app/[locale]/components/nav'
+import { Navbar } from '@/features/ui/nav'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import Footer from '@/app/[locale]/components/footer'
-import { baseUrl } from './sitemap'
+import Footer from '@/features/ui/footer'
+// import { baseUrl } from './sitemap'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL('http://localhost:3000/ja'),
   title: {
     default: 'Next.js Portfolio Starter',
     template: '%s | Next.js Portfolio Starter'
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'My Portfolio',
     description: 'This is my portfolio.',
-    url: baseUrl,
+    url: 'http://localhost:3000/ja',
     siteName: 'My Portfolio',
     locale: 'en_US',
     type: 'website'
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   }
 }
 
-const cx = (...classes) => classes.filter(Boolean).join(' ')
+const cx = (...classes: string[]) => classes.filter(Boolean).join(' ')
 
 export default async function RootLayout({
   children,

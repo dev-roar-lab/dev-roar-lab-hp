@@ -1,3 +1,5 @@
+// TODO 機能確認
+
 import { ImageResponse } from 'next/og'
 
 export function GET(request: Request) {
