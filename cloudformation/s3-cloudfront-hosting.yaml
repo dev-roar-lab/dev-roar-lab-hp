@@ -17,15 +17,9 @@ Parameters:
     Description: (Optional) ARN of ACM certificate in us-east-1 region
     Default: ''
 
-  HostedZoneId:
-    Type: String
-    Description: (Optional) Route 53 Hosted Zone ID for DNS record
-    Default: ''
-
 Conditions:
   HasDomainName: !Not [!Equals [!Ref DomainName, '']]
   HasACMCertificate: !Not [!Equals [!Ref ACMCertificateArn, '']]
-  HasHostedZone: !Not [!Equals [!Ref HostedZoneId, '']]
 
 Resources:
   # S3 Bucket for static website
@@ -158,19 +152,6 @@ Resources:
               StringEquals:
                 AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
 
-  # Route 53 DNS Record (Optional)
-  DNSRecord:
-    Type: AWS::Route53::RecordSet
-    Condition: HasHostedZone
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Ref DomainName
-      Type: A
-      AliasTarget:
-        DNSName: !GetAtt CloudFrontDistribution.DomainName
-        HostedZoneId: Z2FDTNDATAQYW2 # CloudFront Hosted Zone ID (fixed value)
-        EvaluateTargetHealth: false
-
 Outputs:
   WebsiteBucketName:
     Description: Name of the S3 bucket
@@ -189,6 +170,10 @@ Outputs:
     Value: !GetAtt CloudFrontDistribution.DomainName
     Export:
       Name: !Sub '${AWS::StackName}-DomainName'
+
+  CloudFrontHostedZoneId:
+    Description: CloudFront Hosted Zone ID (for Route53 Alias record)
+    Value: Z2FDTNDATAQYW2
 
   WebsiteURL:
     Description: Website URL

@@ -31,9 +31,16 @@ aws cloudformation create-stack \
   --parameters \
     ParameterKey=ProjectName,ParameterValue=dev-roar-lab-hp \
     ParameterKey=DomainName,ParameterValue=example.com \
-    ParameterKey=ACMCertificateArn,ParameterValue=arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERTIFICATE_ID \
-    ParameterKey=HostedZoneId,ParameterValue=Z1234567890ABC
+    ParameterKey=ACMCertificateArn,ParameterValue=arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERTIFICATE_ID
 ```
+
+**注意**: このテンプレートはRoute53のDNSレコードを作成しません。共通のDNS管理で以下のAliasレコードを作成してください：
+
+- **名前**: example.com
+- **タイプ**: A（IPv4アドレス）
+- **エイリアス**: はい
+- **エイリアスターゲット**: CloudFrontディストリビューションのドメイン名（Outputsから取得）
+- **ホストゾーンID**: Z2FDTNDATAQYW2（CloudFrontの固定値）
 
 ### 3. デプロイ状態の確認
 
@@ -157,7 +164,8 @@ aws cloudformation delete-stack --stack-name dev-roar-lab-hp
 2. **S3バケット（Logs）** - CloudFrontのアクセスログを保存（90日で自動削除）
 3. **CloudFront Distribution** - CDN配信とHTTPS対応
 4. **Origin Access Control (OAC)** - S3バケットへの安全なアクセス
-5. **Route 53 Record** - カスタムドメインのDNSレコード（オプション）
+
+**注意**: Route53のDNSレコードは含まれていません。共通のDNS管理で設定してください。
 
 ## セキュリティ機能
 
@@ -177,8 +185,18 @@ aws cloudformation delete-stack --stack-name dev-roar-lab-hp
 ### カスタムドメインが使えない
 
 - ACM証明書が**us-east-1リージョン**にあることを確認してください
-- Route 53のネームサーバーが正しく設定されているか確認してください
 - CloudFrontの証明書検証には最大48時間かかる場合があります
+- DNSレコードが正しく設定されているか確認してください
+
+  ```bash
+  # CloudFrontドメイン名を取得
+  aws cloudformation describe-stacks \
+    --stack-name dev-roar-lab-hp \
+    --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDomainName`].OutputValue' \
+    --output text
+
+  # 共通のDNS管理でこのドメインをAliasレコードとして設定
+  ```
 
 ## コスト見積もり
 
