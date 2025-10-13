@@ -3,8 +3,6 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Navbar } from '@/features/ui/nav'
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import Footer from '@/features/ui/footer'
 // import { baseUrl } from './sitemap'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
@@ -15,6 +13,8 @@ import { getMessages } from 'next-intl/server'
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
+
+export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
   metadataBase: new URL('http://localhost:3000/ja'),
@@ -70,8 +70,6 @@ export default async function RootLayout({
             <Navbar />
             {children}
             <Footer />
-            <Analytics />
-            <SpeedInsights />
           </main>
         </NextIntlClientProvider>
       </body>

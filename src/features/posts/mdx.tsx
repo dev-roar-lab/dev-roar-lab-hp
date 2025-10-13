@@ -7,7 +7,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
 import React from 'react'
 
-function Table({ data }) {
+function Table({ data }: { data: { headers: string[]; rows: string[][] } }) {
   const headers = data.headers.map((header, index) => <th key={index}>{header}</th>)
   const rows = data.rows.map((row, index) => (
     <tr key={index}>
@@ -27,10 +27,10 @@ function Table({ data }) {
   )
 }
 
-function CustomLink(props) {
+function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const href = props.href
 
-  if (href.startsWith('/')) {
+  if (href && href.startsWith('/')) {
     return (
       <Link href={href} {...props}>
         {props.children}
@@ -38,23 +38,23 @@ function CustomLink(props) {
     )
   }
 
-  if (href.startsWith('#')) {
+  if (href && href.startsWith('#')) {
     return <a {...props} />
   }
 
   return <a target="_blank" rel="noopener noreferrer" {...props} />
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />
+function RoundedImage(props: React.ComponentProps<typeof Image>) {
+  return <Image className="rounded-lg" {...props} />
 }
 
-function Code({ children, ...props }) {
+function Code({ children, ...props }: { children: string } & React.HTMLAttributes<HTMLElement>) {
   const codeHTML = highlight(children)
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
-function slugify(str) {
+function slugify(str: string): string {
   return str
     .toString()
     .toLowerCase()
@@ -65,9 +65,9 @@ function slugify(str) {
     .replace(/\-\-+/g, '-') // Replace multiple - with single -
 }
 
-function createHeading(level) {
-  const Heading = ({ children }) => {
-    const slug = slugify(children)
+function createHeading(level: number) {
+  const Heading = ({ children }: { children: React.ReactNode }) => {
+    const slug = slugify(String(children))
     return React.createElement(
       `h${level}`,
       { id: slug },
@@ -100,6 +100,6 @@ const components = {
   Table
 }
 
-export function CustomMDX(props) {
+export function CustomMDX(props: React.ComponentProps<typeof MDXRemote>) {
   return <MDXRemote {...props} components={{ ...components, ...(props.components || {}) }} />
 }
