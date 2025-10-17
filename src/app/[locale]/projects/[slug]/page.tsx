@@ -4,6 +4,7 @@ import { CustomMDX } from '@/features/posts/mdx'
 import { getProjects } from '@/features/projects/getProjects'
 import { routing } from '@/i18n/routing'
 import { siteConfig } from '@/lib/site'
+import { TechBadges } from '@/features/ui/techBadge'
 
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) => {
@@ -84,8 +85,8 @@ export default async function Project({ params }: { params: Promise<{ locale: st
         }}
       />
       <h1 className="title font-semibold text-2xl tracking-tighter mb-2">{project.metadata.title}</h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-        <time className="text-neutral-600 dark:text-neutral-400">
+      <div className="flex flex-col gap-4 mt-2 mb-8">
+        <time className="text-sm text-neutral-600 dark:text-neutral-400">
           {new Date(project.metadata.publishedAt).toLocaleDateString(locale, {
             year: 'numeric',
             month: 'long',
@@ -93,22 +94,8 @@ export default async function Project({ params }: { params: Promise<{ locale: st
           })}
         </time>
         {(() => {
-          const tags = (project.metadata as unknown as { tags?: string[] }).tags
-          return (
-            tags &&
-            Array.isArray(tags) && (
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag: string) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 text-xs font-medium rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )
-          )
+          const tags = (project.metadata as { tags?: string[] }).tags
+          return tags && tags.length > 0 && <TechBadges techs={tags} size="sm" />
         })()}
       </div>
       <article className="prose prose-neutral dark:prose-invert">
