@@ -1,3 +1,7 @@
+'use client'
+
+import { useLocale } from 'next-intl'
+
 function GitHubIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,72 +15,44 @@ function GitHubIcon() {
   )
 }
 
-function TwitterIcon() {
+function RSSIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
-        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+        d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"
         fill="currentColor"
       />
     </svg>
   )
 }
-
-function LinkedInIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
-
-function EmailIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
-
-const socialLinks = [
-  {
-    name: 'github',
-    href: 'https://github.com/dev-roar-lab/dev-roar-lab-hp',
-    icon: GitHubIcon
-  },
-  {
-    name: 'twitter',
-    href: 'https://twitter.com/yourhandle', // TODO: Update with your Twitter handle
-    icon: TwitterIcon
-  },
-  {
-    name: 'linkedin',
-    href: 'https://linkedin.com/in/yourprofile', // TODO: Update with your LinkedIn profile
-    icon: LinkedInIcon
-  },
-  {
-    name: 'email',
-    href: 'mailto:your.email@example.com', // TODO: Update with your email
-    icon: EmailIcon
-  }
-]
 
 export default function Footer() {
+  const locale = useLocale()
+
+  const socialLinks = [
+    {
+      name: 'github',
+      href: 'https://github.com/dev-roar-lab/dev-roar-lab-hp',
+      icon: GitHubIcon,
+      isExternal: true
+    },
+    {
+      name: 'rss',
+      href: `/${locale}/rss.xml`,
+      icon: RSSIcon,
+      isExternal: false
+    }
+  ]
+
   return (
     <footer className="mb-16">
       <ul className="font-sm mt-8 flex flex-wrap gap-4 text-neutral-600 dark:text-neutral-300">
-        {socialLinks.map(({ name, href, icon: Icon }) => (
+        {socialLinks.map(({ name, href, icon: Icon, isExternal }) => (
           <li key={name}>
             <a
               className="flex items-center gap-2 transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-              rel="noopener noreferrer"
-              target="_blank"
+              rel={isExternal ? 'noopener noreferrer' : undefined}
+              target={isExternal ? '_blank' : undefined}
               href={href}
             >
               <Icon />
@@ -85,7 +61,10 @@ export default function Footer() {
           </li>
         ))}
       </ul>
-      <p className="mt-8 text-neutral-600 dark:text-neutral-300">© {new Date().getFullYear()} MIT Licensed</p>
+      <div className="mt-8 flex flex-col gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+        <p>Built with Next.js + TypeScript · Hosted on AWS</p>
+        <p>© {new Date().getFullYear()} MIT Licensed</p>
+      </div>
     </footer>
   )
 }
