@@ -1,5 +1,10 @@
 import { BlogPosts } from '@/features/blog/blogPosts'
 import { setRequestLocale } from 'next-intl/server'
+import { routing } from '@/i18n/routing'
+
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
 
 export const metadata = {
   title: 'Blog',
@@ -15,7 +20,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   return (
     <section>
       <h1 className="font-semibold text-2xl mb-8 tracking-tighter">My Blog</h1>
-      <BlogPosts />
+      <BlogPosts locale={locale} />
     </section>
   )
 }

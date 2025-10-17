@@ -1,9 +1,9 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { formatDate } from '@/features/posts/formatDate'
 import { getBlogPosts } from '@/features/posts/getBlogPosts'
 
-export function BlogPosts() {
-  const allBlogs = getBlogPosts()
+export function BlogPosts({ locale }: { locale: string }) {
+  const allBlogs = getBlogPosts(locale)
 
   return (
     <div>

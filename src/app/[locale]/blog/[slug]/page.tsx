@@ -2,22 +2,26 @@ import { notFound } from 'next/navigation'
 import { CustomMDX } from '@/features/posts/mdx'
 import { formatDate } from '@/features/posts/formatDate'
 import { getBlogPosts } from '@/features/posts/getBlogPosts'
+import { setRequestLocale } from 'next-intl/server'
+import { routing } from '@/i18n/routing'
 // TODO 修正
 // import { baseUrl } from '@/app/[locale]/sitemap'
 
 const baseUrl = 'http://localhost:3000'
 
 export async function generateStaticParams() {
-  const posts = getBlogPosts()
-
-  return posts.map((post) => ({
-    slug: post.slug
-  }))
+  return routing.locales.flatMap((locale) => {
+    const posts = getBlogPosts(locale)
+    return posts.map((post) => ({
+      locale,
+      slug: post.slug
+    }))
+  })
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const post = getBlogPosts().find((post) => post.slug === slug)
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params
+  const post = getBlogPosts(locale).find((post) => post.slug === slug)
   if (!post) {
     return
   }
@@ -49,9 +53,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function Blog({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const post = getBlogPosts().find((post) => post.slug === slug)
+export default async function Blog({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params
+
+  // 静的エクスポート用: ロケールを設定して静的レンダリングを有効化
+  setRequestLocale(locale)
+
+  const post = getBlogPosts(locale).find((post) => post.slug === slug)
 
   if (!post) {
     notFound()
