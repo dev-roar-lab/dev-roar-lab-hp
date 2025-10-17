@@ -3,8 +3,9 @@ import { createNavigation } from 'next-intl/navigation'
 
 export const routing = defineRouting({
   locales: ['en', 'ja'],
-  // TODO デフォルト言語がjaにならない
-  defaultLocale: 'ja'
+  defaultLocale: 'ja',
+  // 静的エクスポート用: ミドルウェアを使用しない
+  localePrefix: 'always'
 })
 
 export const { Link, redirect, usePathname, useRouter } = createNavigation(routing)

@@ -8,7 +8,7 @@ import Footer from '@/features/ui/footer'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
-import { getMessages } from 'next-intl/server'
+import { getMessages, setRequestLocale } from 'next-intl/server'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -57,6 +57,9 @@ export default async function RootLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound()
   }
+
+  // 静的エクスポート用: ロケールを設定して静的レンダリングを有効化
+  setRequestLocale(locale)
 
   const messages = await getMessages()
   return (
