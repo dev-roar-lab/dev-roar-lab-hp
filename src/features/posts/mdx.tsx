@@ -46,6 +46,17 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 function RoundedImage(props: React.ComponentProps<typeof Image>) {
+  // アクセシビリティのためalt属性を必須とする
+  if (process.env.NODE_ENV === 'development') {
+    if (!props.alt && props.alt !== '') {
+      console.error(
+        `[Accessibility Error] Image requires alt attribute: ${props.src}\n` +
+          `Add alt="..." with descriptive text, or alt="" for decorative images.`
+      )
+    }
+  }
+
+  // eslint-disable-next-line jsx-a11y/alt-text -- alt属性はprops経由で渡される
   return <Image className="rounded-lg" {...props} />
 }
 
