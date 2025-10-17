@@ -4,5 +4,37 @@
     "title": "dev-roar-researcher",
     "subtitle": "フルスタックエンジニア",
     "intro": "7年の経験を持つフルスタックエンジニアです。AWSとPythonを中心に、スケーラブルなシステム設計とクラウドインフラストラクチャの構築を得意としています。バックエンドからフロントエンドまで幅広い技術領域に対応し、ビジネス価値を生み出すソフトウェア開発に情熱を注いでいます。"
+  },
+  "about": {
+    "title": "About",
+    "intro": {
+      "title": "はじめに",
+      "description": "dev-roar-researcherとして、7年間にわたりフルスタックエンジニアとして活動しています。クラウドインフラストラクチャとバックエンド開発を中心に、スケーラブルで信頼性の高いシステムの設計・構築に携わってきました。"
+    },
+    "experience": {
+      "title": "経験",
+      "years": "7年以上のソフトウェア開発経験",
+      "role": "フルスタックエンジニアとして、バックエンドからフロントエンドまで幅広く担当",
+      "focus": "AWSを活用したクラウドインフラストラクチャの設計・構築・運用"
+    },
+    "skills": {
+      "title": "技術スタック",
+      "cloud": {
+        "title": "クラウド・インフラストラクチャ",
+        "items": "AWS (EC2, Lambda, S3, RDS, CloudFormation等), Docker, Kubernetes"
+      },
+      "backend": {
+        "title": "バックエンド",
+        "items": "Python (Django, FastAPI, Flask), Node.js, REST API設計, データベース設計"
+      },
+      "frontend": {
+        "title": "フロントエンド",
+        "items": "TypeScript, React, Next.js, Tailwind CSS"
+      }
+    },
+    "contact": {
+      "title": "お問い合わせ",
+      "description": "プロジェクトのご相談やお仕事のご依頼は、GitHubまたはブログのコメント欄からお気軽にご連絡ください。"
+    }
   }
 }

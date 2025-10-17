@@ -4,5 +4,37 @@
     "title": "dev-roar-researcher",
     "subtitle": "Full Stack Engineer",
     "intro": "A full-stack engineer with 7 years of experience, specializing in scalable system design and cloud infrastructure with AWS and Python. Proficient across the entire technology stack from backend to frontend, I am passionate about building software that delivers real business value."
+  },
+  "about": {
+    "title": "About",
+    "intro": {
+      "title": "Introduction",
+      "description": "As dev-roar-researcher, I have been working as a full-stack engineer for 7 years. I specialize in cloud infrastructure and backend development, focusing on designing and building scalable and reliable systems."
+    },
+    "experience": {
+      "title": "Experience",
+      "years": "7+ years of software development experience",
+      "role": "Full-stack engineer working across backend to frontend technologies",
+      "focus": "Cloud infrastructure design, development, and operations using AWS"
+    },
+    "skills": {
+      "title": "Tech Stack",
+      "cloud": {
+        "title": "Cloud & Infrastructure",
+        "items": "AWS (EC2, Lambda, S3, RDS, CloudFormation, etc.), Docker, Kubernetes"
+      },
+      "backend": {
+        "title": "Backend",
+        "items": "Python (Django, FastAPI, Flask), Node.js, REST API Design, Database Design"
+      },
+      "frontend": {
+        "title": "Frontend",
+        "items": "TypeScript, React, Next.js, Tailwind CSS"
+      }
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "For project inquiries or job opportunities, please feel free to reach out via GitHub or the blog comment section."
+    }
   }
 }
