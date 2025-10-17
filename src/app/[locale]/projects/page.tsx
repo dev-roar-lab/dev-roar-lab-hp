@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { Link } from '@/i18n/routing'
 import { getProjects } from '@/features/projects/getProjects'
+import { TechBadges } from '@/features/ui/techBadge'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -42,21 +43,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             <p className="text-neutral-700 dark:text-neutral-300 mb-4">{project.metadata.summary}</p>
             {(() => {
               const tags = (project.metadata as unknown as { tags?: string[] }).tags
-              return (
-                tags &&
-                Array.isArray(tags) && (
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map((tag: string) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-1 text-xs font-medium rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )
-              )
+              return tags && Array.isArray(tags) && <TechBadges techs={tags} size="sm" />
             })()}
           </Link>
         ))}
