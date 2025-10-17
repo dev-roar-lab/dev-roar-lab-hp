@@ -26,7 +26,19 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       <h1 className="font-semibold text-2xl mb-8 tracking-tighter">{t('title')}</h1>
       <div className="space-y-6">
         {projects.map((project) => {
-          const tags = (project.metadata as { tags?: string[] }).tags
+          const rawTags = (project.metadata as { tags?: string[] | string }).tags
+          // タグが文字列の場合は配列に変換
+          let tags: string[] | undefined
+          if (typeof rawTags === 'string') {
+            // YAML配列の文字列表現をパース: "['item1', 'item2']" -> ['item1', 'item2']
+            try {
+              tags = JSON.parse(rawTags.replace(/'/g, '"'))
+            } catch {
+              tags = undefined
+            }
+          } else {
+            tags = rawTags
+          }
           return (
             <Link
               key={project.slug}
