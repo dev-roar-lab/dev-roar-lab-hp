@@ -4,10 +4,7 @@ import { formatDate } from '@/features/posts/formatDate'
 import { getBlogPosts } from '@/features/posts/getBlogPosts'
 import { setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
-// TODO 修正
-// import { baseUrl } from '@/app/[locale]/sitemap'
-
-const baseUrl = 'http://localhost:3000'
+import { siteConfig } from '@/lib/site'
 
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) => {
@@ -27,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 
   const { title, publishedAt: publishedTime, summary: description, image } = post.metadata
-  const ogImage = image ? image : `${baseUrl}/og?title=${encodeURIComponent(title)}`
+  const ogImage = image ? `${siteConfig.url}${image}` : `${siteConfig.url}/og?title=${encodeURIComponent(title)}`
 
   return {
     title,
@@ -37,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       description,
       type: 'article',
       publishedTime,
-      url: `${baseUrl}/blog/${post.slug}`,
+      url: `${siteConfig.url}/${locale}/blog/${post.slug}`,
       images: [
         {
           url: ogImage
@@ -49,6 +46,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       title,
       description,
       images: [ogImage]
+    },
+    alternates: {
+      canonical: `${siteConfig.url}/${locale}/blog/${post.slug}`
     }
   }
 }
@@ -79,12 +79,19 @@ export default async function Blog({ params }: { params: Promise<{ locale: strin
             dateModified: post.metadata.publishedAt,
             description: post.metadata.summary,
             image: post.metadata.image
-              ? `${baseUrl}${post.metadata.image}`
-              : `/og?title=${encodeURIComponent(post.metadata.title)}`,
-            url: `${baseUrl}/blog/${post.slug}`,
+              ? `${siteConfig.url}${post.metadata.image}`
+              : `${siteConfig.url}/og?title=${encodeURIComponent(post.metadata.title)}`,
+            url: `${siteConfig.url}/${locale}/blog/${post.slug}`,
+            inLanguage: locale,
             author: {
               '@type': 'Person',
-              name: 'My Portfolio'
+              name: siteConfig.author.name,
+              url: siteConfig.author.github
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: siteConfig.name,
+              url: siteConfig.url
             }
           })
         }}

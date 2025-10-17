@@ -3,6 +3,7 @@ import { setRequestLocale } from 'next-intl/server'
 import { CustomMDX } from '@/features/posts/mdx'
 import { getProjects } from '@/features/projects/getProjects'
 import { routing } from '@/i18n/routing'
+import { siteConfig } from '@/lib/site'
 
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) => {
@@ -12,6 +13,36 @@ export async function generateStaticParams() {
       slug: project.slug
     }))
   })
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params
+  const project = getProjects(locale).find((project) => project.slug === slug)
+  if (!project) {
+    return
+  }
+
+  const { title, publishedAt, summary: description } = project.metadata
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: publishedAt,
+      url: `${siteConfig.url}/${locale}/projects/${project.slug}`
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description
+    },
+    alternates: {
+      canonical: `${siteConfig.url}/${locale}/projects/${project.slug}`
+    }
+  }
 }
 
 export default async function Project({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -32,10 +63,23 @@ export default async function Project({ params }: { params: Promise<{ locale: st
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'Project',
+            '@type': 'CreativeWork',
+            name: project.metadata.title,
             headline: project.metadata.title,
             datePublished: project.metadata.publishedAt,
-            description: project.metadata.summary
+            description: project.metadata.summary,
+            url: `${siteConfig.url}/${locale}/projects/${project.slug}`,
+            inLanguage: locale,
+            author: {
+              '@type': 'Person',
+              name: siteConfig.author.name,
+              url: siteConfig.author.github
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: siteConfig.name,
+              url: siteConfig.url
+            }
           })
         }}
       />

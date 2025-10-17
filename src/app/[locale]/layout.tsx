@@ -4,11 +4,11 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Navbar } from '@/features/ui/nav'
 import Footer from '@/features/ui/footer'
-// import { baseUrl } from './sitemap'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import { getMessages, setRequestLocale } from 'next-intl/server'
+import { siteConfig, siteMetadata } from '@/lib/site'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -16,32 +16,52 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-static'
 
-export const metadata: Metadata = {
-  metadataBase: new URL('http://localhost:3000/ja'),
-  title: {
-    default: 'Dev Roar Lab',
-    template: '%s | Dev Roar Lab'
-  },
-  description:
-    'Dev Roar Labのポートフォリオサイト。AWSとPythonを中心としたフルスタックエンジニアの技術ブログとプロジェクト紹介。',
-  openGraph: {
-    title: 'Dev Roar Lab',
-    description:
-      'Dev Roar Labのポートフォリオサイト。AWSとPythonを中心としたフルスタックエンジニアの技術ブログとプロジェクト紹介。',
-    url: 'http://localhost:3000/ja',
-    siteName: 'Dev Roar Lab',
-    locale: 'ja_JP',
-    type: 'website'
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  const isJapanese = locale === 'ja'
+  const metadata = isJapanese ? siteMetadata.ja : siteMetadata.en
+  const localeCode = isJapanese ? 'ja_JP' : 'en_US'
+
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title: {
+      default: metadata.title,
+      template: `%s | ${siteConfig.name}`
+    },
+    description: metadata.description,
+    keywords: [...metadata.keywords],
+    authors: [{ name: siteConfig.author.name }],
+    creator: siteConfig.author.name,
+    openGraph: {
+      type: 'website',
+      locale: localeCode,
+      url: siteConfig.url,
+      siteName: siteConfig.name,
+      title: metadata.title,
+      description: metadata.description
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metadata.title,
+      description: metadata.description
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1
+      }
+    },
+    alternates: {
+      canonical: `${siteConfig.url}/${locale}`,
+      languages: {
+        ja: `${siteConfig.url}/ja`,
+        en: `${siteConfig.url}/en`
+      }
     }
   }
 }

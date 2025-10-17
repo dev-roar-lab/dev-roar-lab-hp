@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Homepage -->
+  <url>
+    <loc>https://dev-roar-lab.com/ja</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja"/>
+  </url>
+  <url>
+    <loc>https://dev-roar-lab.com/en</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja"/>
+  </url>
+
+  <!-- About -->
+  <url>
+    <loc>https://dev-roar-lab.com/ja/about</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/about"/>
+  </url>
+  <url>
+    <loc>https://dev-roar-lab.com/en/about</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/about"/>
+  </url>
+
+  <!-- Blog -->
+  <url>
+    <loc>https://dev-roar-lab.com/ja/blog</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/blog"/>
+  </url>
+  <url>
+    <loc>https://dev-roar-lab.com/en/blog</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/blog"/>
+  </url>
+
+  <!-- Projects -->
+  <url>
+    <loc>https://dev-roar-lab.com/ja/projects</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/projects"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/projects"/>
+  </url>
+  <url>
+    <loc>https://dev-roar-lab.com/en/projects</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/projects"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/projects"/>
+  </url>
+
+  <!-- Sample Blog Post -->
+  <url>
+    <loc>https://dev-roar-lab.com/ja/blog/hello-world</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/blog/hello-world"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/blog/hello-world"/>
+  </url>
+  <url>
+    <loc>https://dev-roar-lab.com/en/blog/hello-world</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/blog/hello-world"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/blog/hello-world"/>
+  </url>
+
+  <!-- Sample Project -->
+  <url>
+    <loc>https://dev-roar-lab.com/ja/projects/aws-serverless-api</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/projects/aws-serverless-api"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/projects/aws-serverless-api"/>
+  </url>
+  <url>
+    <loc>https://dev-roar-lab.com/en/projects/aws-serverless-api</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dev-roar-lab.com/en/projects/aws-serverless-api"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dev-roar-lab.com/ja/projects/aws-serverless-api"/>
+  </url>
+</urlset>
