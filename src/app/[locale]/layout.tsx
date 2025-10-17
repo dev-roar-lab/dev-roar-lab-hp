@@ -19,16 +19,18 @@ export const dynamic = 'force-static'
 export const metadata: Metadata = {
   metadataBase: new URL('http://localhost:3000/ja'),
   title: {
-    default: 'Next.js Portfolio Starter',
-    template: '%s | Next.js Portfolio Starter'
+    default: 'Dev Roar Lab',
+    template: '%s | Dev Roar Lab'
   },
-  description: 'This is my portfolio.',
+  description:
+    'Dev Roar Labのポートフォリオサイト。AWSとPythonを中心としたフルスタックエンジニアの技術ブログとプロジェクト紹介。',
   openGraph: {
-    title: 'My Portfolio',
-    description: 'This is my portfolio.',
+    title: 'Dev Roar Lab',
+    description:
+      'Dev Roar Labのポートフォリオサイト。AWSとPythonを中心としたフルスタックエンジニアの技術ブログとプロジェクト紹介。',
     url: 'http://localhost:3000/ja',
-    siteName: 'My Portfolio',
-    locale: 'en_US',
+    siteName: 'Dev Roar Lab',
+    locale: 'ja_JP',
     type: 'website'
   },
   robots: {
