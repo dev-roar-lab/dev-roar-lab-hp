@@ -3,6 +3,7 @@ import { BlogPosts } from '@/features/blog/blogPosts'
 import { routing } from '@/i18n/routing'
 import { Link } from '@/i18n/routing'
 import { HomePageContent } from '@/features/ui/homePageContent'
+import { SkillBadges } from '@/features/ui/skillBadge'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -48,16 +49,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         {/* Skills Section */}
         <div className="mb-16">
           <h2 className="text-xl font-semibold mb-4 tracking-tighter">{t('home.skills.title')}</h2>
-          <div className="flex flex-wrap gap-2">
-            {['AWS', 'Python', 'TypeScript', 'React', 'Next.js', 'Docker', 'Node.js'].map((skill) => (
-              <span
-                key={skill}
-                className="px-3 py-1.5 text-sm font-medium rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
+          <SkillBadges />
         </div>
 
         {/* Blog Posts Section */}
