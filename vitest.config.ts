@@ -10,7 +10,41 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
   test: {
+    // カバレッジ設定
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        '**/*.stories.{ts,tsx}',
+        '**/*.config.{ts,js,mjs}',
+        '**/node_modules/**',
+        '**/out/**',
+        '**/.next/**',
+        '**/types/**',
+        'src/app/**/layout.tsx',
+        'src/middleware.ts',
+        '**/__tests__/**',
+        '**/fixtures/**'
+      ],
+      // カバレッジ目標（初期: 70%）
+      thresholds: {
+        lines: 70,
+        functions: 75,
+        branches: 70,
+        statements: 70
+      }
+    },
     workspace: [
+      // ユニットテスト用workspace
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['**/__tests__/**/*.test.{ts,tsx}'],
+          environment: 'node'
+        }
+      },
+      // Storybook用workspace
       {
         extends: true,
         plugins: [
