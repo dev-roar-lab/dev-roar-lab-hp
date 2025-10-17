@@ -7,6 +7,12 @@ export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
 
+export const metadata = {
+  title: 'Projects',
+  description:
+    'Explore my portfolio of projects showcasing expertise in AWS, Python, TypeScript, and full-stack development.'
+}
+
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   setRequestLocale(locale)

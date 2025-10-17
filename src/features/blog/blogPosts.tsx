@@ -6,7 +6,7 @@ export function BlogPosts({ locale }: { locale: string }) {
   const allBlogs = getBlogPosts(locale)
 
   return (
-    <div>
+    <div className="space-y-8">
       {allBlogs
         .sort((a, b) => {
           if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
@@ -15,12 +15,25 @@ export function BlogPosts({ locale }: { locale: string }) {
           return 1
         })
         .map((post) => (
-          <Link key={post.slug} className="flex flex-col space-y-1 mb-4" href={`/blog/${post.slug}`}>
-            <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-2">
-              <p className="text-neutral-600 dark:text-neutral-400 w-[100px] tabular-nums">
-                {formatDate(post.metadata.publishedAt, false)}
-              </p>
-              <p className="text-neutral-900 dark:text-neutral-100 tracking-tight">{post.metadata.title}</p>
+          <Link
+            key={post.slug}
+            className="block group p-4 -mx-4 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
+            href={`/blog/${post.slug}`}
+          >
+            <div className="flex flex-col space-y-2">
+              <div className="flex flex-col md:flex-row md:items-baseline md:space-x-3">
+                <time className="text-sm text-neutral-600 dark:text-neutral-400 tabular-nums">
+                  {formatDate(post.metadata.publishedAt, false)}
+                </time>
+                <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100 tracking-tight group-hover:text-neutral-700 dark:group-hover:text-neutral-300 transition-colors">
+                  {post.metadata.title}
+                </h3>
+              </div>
+              {post.metadata.summary && (
+                <p className="text-sm text-neutral-700 dark:text-neutral-300 line-clamp-2 leading-relaxed">
+                  {post.metadata.summary}
+                </p>
+              )}
             </div>
           </Link>
         ))}

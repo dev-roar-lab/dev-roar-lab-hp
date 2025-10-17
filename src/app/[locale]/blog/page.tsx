@@ -8,7 +8,7 @@ export async function generateStaticParams() {
 
 export const metadata = {
   title: 'Blog',
-  description: 'Read my blog.'
+  description: 'Read my thoughts on software development, AWS, TypeScript, Python, and web technologies.'
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
