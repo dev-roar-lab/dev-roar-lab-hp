@@ -1,6 +1,6 @@
 'use client'
 
-import { SiAmazonaws, SiPython, SiTypescript, SiReact, SiNextdotjs, SiDocker, SiNodedotjs } from 'react-icons/si'
+import { SiAmazon, SiPython, SiTypescript, SiReact, SiNextdotjs, SiDocker, SiNodedotjs } from 'react-icons/si'
 import { IconType } from 'react-icons'
 
 interface Skill {
@@ -9,7 +9,7 @@ interface Skill {
 }
 
 const skills: Skill[] = [
-  { name: 'AWS', icon: SiAmazonaws },
+  { name: 'AWS', icon: SiAmazon },
   { name: 'Python', icon: SiPython },
   { name: 'TypeScript', icon: SiTypescript },
   { name: 'React', icon: SiReact },
