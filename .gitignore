@@ -49,3 +49,6 @@ next-env.d.ts
 *.key
 cloudformation/parameters/*.json
 !cloudformation/parameters/*.example.json
+
+# Claude Code local settings
+.claude/settings.local.json

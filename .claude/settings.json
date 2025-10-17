@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(npm:*)",
+      "Bash(git:*)",
+      "Bash(make:*)",
+      "Bash(env:*)",
+      "Edit(**/*.tsx)",
+      "Edit(**/*.ts)",
+      "Edit(**/*.json)",
+      "Edit(**/*.md)",
+      "Edit(**/*.mdx)",
+      "Write(**/*.tsx)",
+      "Write(**/*.ts)",
+      "Write(**/*.json)",
+      "Write(**/*.md)",
+      "Write(**/*.mdx)"
+    ],
+    "deny": ["Bash(rm -rf /)", "Bash(rm -rf ~)", "Bash(dd *)", "Bash(mkfs*)", "Edit(~/.ssh/*)", "Edit(/etc/*)"]
+  },
+  "defaultMode": "default"
+}
