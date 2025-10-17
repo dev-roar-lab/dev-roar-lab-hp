@@ -1,0 +1,78 @@
+---
+title: 'AWS Serverless API Platform Development'
+publishedAt: '2024-03-15'
+summary: 'Designed and built a scalable serverless API platform using Lambda, API Gateway, and DynamoDB.'
+tags: ['AWS', 'Lambda', 'API Gateway', 'DynamoDB', 'Python']
+---
+
+## Project Overview
+
+Built a fully serverless API platform on AWS to handle large-scale traffic. By migrating from an EC2-based system, we significantly reduced operational costs and improved scalability.
+
+## Technologies Used
+
+- **AWS Lambda**: Business logic implementation
+- **API Gateway**: RESTful API endpoint management
+- **DynamoDB**: NoSQL database
+- **CloudFormation**: Infrastructure as Code (IaC)
+- **Python 3.11**: Lambda function implementation
+- **CI/CD**: GitHub Actions
+
+## Key Features
+
+### 1. Scalable API Design
+
+Lambda auto-scaling enables flexible response to traffic spikes. Achieved stable performance through concurrent execution control and provisioned concurrency settings.
+
+### 2. Security Measures
+
+- Authentication and authorization with API Gateway (Lambda Authorizer)
+- IAM roles following principle of least privilege
+- Secure communication using VPC endpoints
+- Monitoring and alerting with CloudWatch Logs
+
+### 3. Cost Optimization
+
+Reduced monthly operational costs by **60%** compared to the previous EC2-based system.
+
+```python
+# Lambda function example
+import json
+import boto3
+from typing import Dict, Any
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('users')
+
+def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
+    try:
+        user_id = event['pathParameters']['id']
+        response = table.get_item(Key={'userId': user_id})
+
+        if 'Item' not in response:
+            return {
+                'statusCode': 404,
+                'body': json.dumps({'error': 'User not found'})
+            }
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps(response['Item'])
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+```
+
+## Results
+
+- **Performance**: Maintained average response time under 50ms
+- **Cost Reduction**: 60% reduction in monthly operational costs
+- **Availability**: Achieved 99.99% uptime
+- **Scalability**: Capable of handling 1000 requests per second
+
+## Lessons Learned
+
+Learned the importance of production-ready optimizations in serverless architecture design, including cold start mitigation and DynamoDB capacity planning. Implementing IaC with CloudFormation enabled reproducible infrastructure deployment.

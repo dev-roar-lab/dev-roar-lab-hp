@@ -43,5 +43,8 @@
       "title": "お問い合わせ",
       "description": "プロジェクトのご相談やお仕事のご依頼は、GitHubまたはブログのコメント欄からお気軽にご連絡ください。"
     }
+  },
+  "projects": {
+    "title": "Projects"
   }
 }
