@@ -7,7 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Core Development
 
 ```bash
-npm run dev              # Start development server with Turbopack
+npm run dev              # Start development server with Turbopack (cache disabled)
+npm run dev:clean        # Clean .next cache and start dev server (use when cache issues occur)
 npm run build            # Build for production (outputs to out/ directory)
 npm start                # Start production server
 npm run lint             # Run ESLint
