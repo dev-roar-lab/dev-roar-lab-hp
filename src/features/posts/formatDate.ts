@@ -1,3 +1,16 @@
+/**
+ * Formats a date string into a human-readable format
+ *
+ * @param date - ISO date string (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss)
+ * @param includeRelative - Whether to include relative time (e.g., "3d ago")
+ * @returns Formatted date string in "Month Day, Year" format, optionally with relative time
+ *
+ * @example
+ * ```ts
+ * formatDate('2025-01-01') // "January 1, 2025"
+ * formatDate('2025-01-01', true) // "January 1, 2025 (3d ago)"
+ * ```
+ */
 export function formatDate(date: string, includeRelative = false) {
   const currentDate = new Date()
   if (!date.includes('T')) {

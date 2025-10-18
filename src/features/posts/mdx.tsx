@@ -4,6 +4,13 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
 import React from 'react'
 
+/**
+ * Custom table component for MDX content
+ *
+ * @param props - Component props
+ * @param props.data - Table data with headers and rows
+ * @returns Rendered HTML table
+ */
 function Table({ data }: { data: { headers: string[]; rows: string[][] } }) {
   const headers = data.headers.map((header, index) => <th key={index}>{header}</th>)
   const rows = data.rows.map((row, index) => (
@@ -24,6 +31,17 @@ function Table({ data }: { data: { headers: string[]; rows: string[][] } }) {
   )
 }
 
+/**
+ * Custom link component for MDX content
+ *
+ * Handles three types of links:
+ * - Internal links (starting with '/') - Uses Next.js Link component
+ * - Anchor links (starting with '#') - Standard anchor tag
+ * - External links - Opens in new tab with security attributes
+ *
+ * @param props - Standard anchor element props
+ * @returns Appropriately configured link component
+ */
 function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const href = props.href
 
@@ -42,6 +60,15 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />
 }
 
+/**
+ * Custom image component for MDX content with rounded corners
+ *
+ * Validates alt attribute in development mode for accessibility.
+ * Wraps Next.js Image component with rounded styling.
+ *
+ * @param props - Next.js Image component props
+ * @returns Styled Image component with rounded corners
+ */
 function RoundedImage(props: React.ComponentProps<typeof Image>) {
   // アクセシビリティのためalt属性を必須とする
   if (process.env.NODE_ENV === 'development') {
@@ -57,11 +84,41 @@ function RoundedImage(props: React.ComponentProps<typeof Image>) {
   return <Image className="rounded-lg" {...props} />
 }
 
+/**
+ * Custom code component for MDX content with syntax highlighting
+ *
+ * Uses sugar-high for syntax highlighting.
+ * Renders highlighted code as HTML.
+ *
+ * @param props - Component props
+ * @param props.children - Code string to highlight
+ * @returns Code element with syntax highlighting
+ */
 function Code({ children, ...props }: { children: string } & React.HTMLAttributes<HTMLElement>) {
   const codeHTML = highlight(children)
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
+/**
+ * Converts a string to URL-friendly slug format
+ *
+ * Transformation process:
+ * 1. Convert to lowercase
+ * 2. Trim whitespace
+ * 3. Replace spaces with hyphens
+ * 4. Replace '&' with 'and'
+ * 5. Remove non-word characters (except hyphens)
+ * 6. Replace multiple consecutive hyphens with single hyphen
+ *
+ * @param str - String to convert to slug
+ * @returns URL-friendly slug string
+ *
+ * @example
+ * ```ts
+ * slugify('Hello World & More') // 'hello-world-and-more'
+ * slugify('TypeScript 101!') // 'typescript-101'
+ * ```
+ */
 function slugify(str: string): string {
   return str
     .toString()
@@ -73,6 +130,24 @@ function slugify(str: string): string {
     .replace(/\-\-+/g, '-') // Replace multiple - with single -
 }
 
+/**
+ * Creates a heading component with auto-generated anchor links
+ *
+ * Generates heading components (h1-h6) that:
+ * - Automatically create slugified IDs from heading text
+ * - Include anchor links for direct navigation
+ * - Support deep linking to specific sections
+ *
+ * @param level - Heading level (1-6)
+ * @returns Heading component with anchor link support
+ *
+ * @example
+ * ```tsx
+ * const H2 = createHeading(2)
+ * <H2>My Heading</H2>
+ * // Renders: <h2 id="my-heading"><a href="#my-heading" class="anchor"></a>My Heading</h2>
+ * ```
+ */
 function createHeading(level: number) {
   const Heading = ({ children }: { children: React.ReactNode }) => {
     const slug = slugify(String(children))
@@ -95,6 +170,16 @@ function createHeading(level: number) {
   return Heading
 }
 
+/**
+ * Custom MDX component mappings
+ *
+ * Maps MDX/Markdown elements to custom React components:
+ * - h1-h6: Headings with auto-generated anchor links
+ * - Image: Next.js Image with rounded corners
+ * - a: Links with internal/external handling
+ * - code: Syntax-highlighted code blocks
+ * - Table: Custom table component
+ */
 const components = {
   h1: createHeading(1),
   h2: createHeading(2),
@@ -108,6 +193,21 @@ const components = {
   Table
 }
 
+/**
+ * Custom MDX renderer component
+ *
+ * Wraps next-mdx-remote's MDXRemote with custom component mappings.
+ * Allows additional component overrides via props.
+ *
+ * @param props - MDXRemote component props
+ * @returns Rendered MDX content with custom components
+ *
+ * @example
+ * ```tsx
+ * <CustomMDX source={mdxContent} />
+ * <CustomMDX source={mdxContent} components={{ h1: CustomH1 }} />
+ * ```
+ */
 export function CustomMDX(props: React.ComponentProps<typeof MDXRemote>) {
   return <MDXRemote {...props} components={{ ...components, ...(props.components || {}) }} />
 }

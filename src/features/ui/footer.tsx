@@ -2,6 +2,11 @@
 
 import { useLocale } from 'next-intl'
 
+/**
+ * GitHub logo icon component
+ *
+ * @returns SVG icon for GitHub
+ */
 function GitHubIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,6 +20,11 @@ function GitHubIcon() {
   )
 }
 
+/**
+ * RSS feed icon component
+ *
+ * @returns SVG icon for RSS feed
+ */
 function RSSIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,6 +36,20 @@ function RSSIcon() {
   )
 }
 
+/**
+ * Site footer component
+ *
+ * Displays social links (GitHub, RSS), build information, and copyright notice.
+ * Social links configuration includes icon components and external link handling.
+ * Automatically uses the current locale for RSS feed URL.
+ *
+ * @returns Footer component with social links and site info
+ *
+ * @example
+ * ```tsx
+ * <Footer />
+ * ```
+ */
 export default function Footer() {
   const locale = useLocale()
 

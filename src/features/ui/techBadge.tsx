@@ -2,11 +2,31 @@
 
 import { getTechInfo } from './techIconMap'
 
+/**
+ * Props for TechBadge component
+ */
 interface TechBadgeProps {
+  /** Technology name (e.g., 'TypeScript', 'React', 'AWS') */
   tech: string
+  /** Badge size variant */
   size?: 'sm' | 'md'
 }
 
+/**
+ * Technology badge component with icon and label
+ *
+ * Displays a styled badge for a technology with an optional icon from the tech icon map.
+ * If the technology has an icon defined, it will be displayed with its brand color.
+ *
+ * @param props - Component props
+ * @returns Technology badge component
+ *
+ * @example
+ * ```tsx
+ * <TechBadge tech="TypeScript" size="md" />
+ * <TechBadge tech="React" size="sm" />
+ * ```
+ */
 export function TechBadge({ tech, size = 'md' }: TechBadgeProps) {
   const techInfo = getTechInfo(tech)
 
@@ -36,11 +56,30 @@ export function TechBadge({ tech, size = 'md' }: TechBadgeProps) {
   )
 }
 
+/**
+ * Props for TechBadges component
+ */
 interface TechBadgesProps {
+  /** Array of technology names to display as badges */
   techs: string[]
+  /** Badge size variant for all badges */
   size?: 'sm' | 'md'
 }
 
+/**
+ * Multiple technology badges component
+ *
+ * Renders a collection of technology badges in a flex-wrap layout with consistent spacing.
+ *
+ * @param props - Component props
+ * @returns Collection of technology badges
+ *
+ * @example
+ * ```tsx
+ * <TechBadges techs={['TypeScript', 'React', 'Next.js']} size="md" />
+ * <TechBadges techs={['AWS', 'Docker']} size="sm" />
+ * ```
+ */
 export function TechBadges({ techs, size = 'md' }: TechBadgesProps) {
   return (
     <div className="flex flex-wrap gap-2">

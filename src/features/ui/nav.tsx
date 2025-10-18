@@ -2,6 +2,9 @@
 
 import { Link, usePathname } from '@/i18n/routing'
 
+/**
+ * Navigation item configuration
+ */
 const navItems = {
   '/': {
     name: 'home'
@@ -17,6 +20,20 @@ const navItems = {
   }
 }
 
+/**
+ * Main navigation bar component
+ *
+ * Displays a horizontal navigation menu with active state highlighting.
+ * Navigation items are defined in the navItems configuration.
+ * Active state is determined by matching the current pathname.
+ *
+ * @returns Navigation bar component
+ *
+ * @example
+ * ```tsx
+ * <Navbar />
+ * ```
+ */
 export function Navbar() {
   const pathname = usePathname()
 
