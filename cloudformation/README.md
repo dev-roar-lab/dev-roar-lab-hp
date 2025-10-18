@@ -227,11 +227,107 @@ aws cloudformation delete-stack --stack-name dev-roar-lab-hp
 
 ## セキュリティ機能
 
-- ✅ S3バケットはパブリックアクセス禁止
-- ✅ CloudFront経由のみアクセス可能（OAC使用）
-- ✅ HTTPS強制リダイレクト
-- ✅ セキュリティヘッダー自動付与
-- ✅ アクセスログ記録
+### インフラストラクチャセキュリティ
+
+- ✅ **S3バケット**: パブリックアクセス完全禁止
+- ✅ **Origin Access Control (OAC)**: CloudFront経由のみアクセス可能
+- ✅ **HTTPS強制**: すべてのHTTPリクエストをHTTPSにリダイレクト
+- ✅ **アクセスログ**: CloudFrontログを90日間保持（自動削除）
+- ✅ **バージョニング**: S3バケットのバージョニング有効化
+
+### カスタムセキュリティヘッダーポリシー
+
+CloudFrontのカスタムレスポンスヘッダーポリシーにより、以下のセキュリティヘッダーを自動付与：
+
+#### 1. Strict-Transport-Security (HSTS)
+
+```
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+```
+
+- 2年間（63072000秒）ブラウザにHTTPS接続を強制
+- サブドメインも含む
+- HSTS Preloadリストに登録可能
+
+#### 2. X-Content-Type-Options
+
+```
+X-Content-Type-Options: nosniff
+```
+
+- ブラウザのMIMEタイプ推測を禁止
+- XSS攻撃リスクを軽減
+
+#### 3. X-Frame-Options
+
+```
+X-Frame-Options: DENY
+```
+
+- iframe埋め込みを完全禁止
+- クリックジャッキング攻撃を防止
+
+#### 4. Referrer-Policy
+
+```
+Referrer-Policy: strict-origin-when-cross-origin
+```
+
+- クロスオリジンリクエスト時は参照元のオリジンのみ送信
+- プライバシー保護
+
+#### 5. X-XSS-Protection
+
+```
+X-XSS-Protection: 1; mode=block
+```
+
+- ブラウザのXSS保護機能を有効化（レガシーブラウザ対応）
+
+#### 6. Content-Security-Policy (CSP)
+
+```
+Content-Security-Policy:
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https:;
+  font-src 'self' data:;
+  connect-src 'self';
+  frame-ancestors 'none';
+  base-uri 'self';
+  form-action 'self';
+```
+
+**ポリシーの詳細**:
+
+- `default-src 'self'`: デフォルトは同一オリジンのみ許可
+- `script-src`: スクリプトは同一オリジン + インライン + eval（Next.js要件）
+- `style-src`: スタイルは同一オリジン + インライン
+- `img-src`: 画像は同一オリジン + data URI + HTTPS
+- `font-src`: フォントは同一オリジン + data URI
+- `connect-src`: API接続は同一オリジンのみ
+- `frame-ancestors 'none'`: iframe埋め込み禁止
+- `base-uri 'self'`: `<base>`タグの制限
+- `form-action 'self'`: フォーム送信先を同一オリジンに制限
+
+**注意**: `'unsafe-inline'`と`'unsafe-eval'`は、Next.jsの動的コード実行とReact Hydrationのために必要です。将来的にはnonce/hash方式への移行を推奨します。
+
+#### 7. Permissions-Policy
+
+```
+Permissions-Policy: geolocation=(), microphone=(), camera=()
+```
+
+- 位置情報、マイク、カメラへのアクセスを全て禁止
+
+### セキュリティスコア
+
+このセキュリティ設定により、以下のスキャンツールで高スコアを取得できます：
+
+- **Mozilla Observatory**: A+ランク目標
+- **Security Headers**: Aランク目標
+- **SSL Labs**: A+ランク（HTTPS設定による）
 
 ## トラブルシューティング
 
