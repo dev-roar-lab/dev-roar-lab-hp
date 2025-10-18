@@ -51,7 +51,9 @@ npm run ci               # Run full CI pipeline (format → lint → build)
 ### Testing
 
 ```bash
-npm test                 # Run Vitest with Playwright browser mode (tests Storybook stories)
+npm test                 # Run Vitest unit tests
+npm run test:ui          # Run tests in UI mode
+npm run test:coverage    # Run tests with coverage report
 ```
 
 ### Storybook
@@ -93,12 +95,22 @@ The codebase follows domain-driven design principles:
 src/
 ├── app/[locale]/          # Next.js App Router pages (all routes are locale-aware)
 │   ├── page.tsx          # Homepage
-│   ├── blog/page.tsx     # Blog index page
-│   ├── blog/[slug]/page.tsx  # Individual blog post pages
-│   └── layout.tsx        # Root layout with i18n provider, fonts, and metadata
+│   ├── about/            # About page
+│   ├── blog/             # Blog pages
+│   │   ├── page.tsx      # Blog index page
+│   │   └── [slug]/page.tsx  # Individual blog post pages
+│   ├── projects/         # Projects pages
+│   │   ├── page.tsx      # Projects index page
+│   │   └── [slug]/page.tsx  # Individual project pages
+│   ├── og/               # Open Graph image generation
+│   ├── rss.xml/          # RSS feed generation
+│   ├── layout.tsx        # Root layout with i18n provider, fonts, and metadata
+│   ├── not-found.tsx     # 404 page
+│   └── global.css        # Global styles
 ├── features/              # Feature-based modules
 │   ├── posts/            # Blog post content and utilities
 │   │   ├── contents/     # MDX blog posts stored here
+│   │   ├── __tests__/    # Unit tests for post utilities
 │   │   ├── mdx.tsx       # Custom MDX components (syntax highlighting, headings, links, etc.)
 │   │   ├── getBlogPosts.ts  # Main entry point to fetch all posts
 │   │   ├── getMDXFiles.ts   # Lists .mdx files in a directory
@@ -106,12 +118,25 @@ src/
 │   │   ├── parseFrontmatter.ts  # Parses YAML frontmatter
 │   │   ├── getMDXData.ts    # Combines file reading and metadata extraction
 │   │   └── formatDate.ts    # Date formatting utility
+│   ├── projects/         # Project content and utilities
+│   │   ├── contents/     # MDX project files
+│   │   ├── __tests__/    # Unit tests for project utilities
+│   │   └── getProjects.ts  # Fetch all projects
 │   ├── blog/             # Blog UI components
-│   └── ui/               # Shared UI components (nav, footer)
+│   │   └── blogPosts.tsx
+│   └── ui/               # Shared UI components
+│       ├── nav.tsx       # Navigation component
+│       ├── footer.tsx    # Footer component
+│       ├── techBadge.tsx # Technology badge component
+│       ├── skillBadge.tsx # Skill badge component
+│       ├── animations.tsx # Animation utilities
+│       └── *.stories.tsx # Storybook stories
 ├── i18n/                 # i18n configuration
 │   ├── routing.ts        # Locale definitions and navigation utilities
 │   ├── navigation.ts     # Re-exports navigation utilities
 │   └── request.ts        # Server-side i18n utilities
+├── lib/                  # Shared libraries
+│   └── site.ts          # Site configuration
 └── middleware.ts         # next-intl middleware for locale handling
 ```
 
@@ -229,14 +254,64 @@ The site is deployed to AWS S3 + CloudFront using CloudFormation. See `cloudform
 
 ## Testing
 
-Tests are written for Storybook stories using Vitest + Playwright browser mode. The test configuration is in `vitest.config.ts` and runs against components defined in `.storybook/`.
+This project uses **Vitest** for unit testing with comprehensive test coverage.
+
+### Test Structure
+
+- **Unit Tests**: Located in `__tests__/` directories next to source files
+- **Test Files**: 7 test files with 106 test cases (all passing)
+- **Coverage**: Target 70% (lines, branches, statements), 75% (functions)
+- **Configuration**: `vitest.config.ts` with workspace setup
+
+### Test Coverage Status
+
+Currently tested modules:
+
+- ✅ `parseFrontmatter.ts` - 13 tests
+- ✅ `getMDXData.ts` - 13 tests
+- ✅ `getBlogPosts.ts` - 16 tests
+- ✅ `getProjects.ts` - 16 tests
+- ✅ `getMDXFiles.ts` - 11 tests
+- ✅ `readMDXFile.ts` - 11 tests
+- ✅ `formatDate.ts` - 26 tests
+
+### Storybook Tests
+
+Storybook component tests are currently **disabled** due to compatibility issues between `@storybook/experimental-nextjs-vite@8.6.12` and Next.js 15.5.4. See `vitest.config.ts` for details.
+
+### Running Tests
+
+```bash
+npm test              # Run all unit tests
+npm run test:ui       # Run tests with UI
+npm run test:coverage # Generate coverage report
+```
 
 ## Key Dependencies
 
-- **Next.js 15** with App Router and Turbopack
-- **React 19**
-- **next-intl 4.1** for i18n
-- **next-mdx-remote 5.0** for MDX rendering
-- **sugar-high** for syntax highlighting
-- **Tailwind CSS v4**
-- **Vitest + Playwright** for testing
+### Core Framework
+
+- **Next.js 15.5.4** with App Router and Turbopack
+- **React 19.1.0**
+- **TypeScript 5.8.3**
+
+### Styling & UI
+
+- **Tailwind CSS 4.1.4** with PostCSS plugin
+- **Geist Font 1.3.1** for typography
+- **Framer Motion 12.23.24** for animations
+- **React Icons 5.5.0** for icon components
+
+### Content & i18n
+
+- **next-intl 4.1.0** for internationalization
+- **next-mdx-remote 5.0.0** for MDX rendering
+- **sugar-high 0.9.3** for syntax highlighting
+
+### Development & Testing
+
+- **Vitest 3.1.2** for unit testing
+- **Playwright 1.52.0** for browser testing
+- **Storybook 8.6.12** for component development
+- **ESLint 9.37.0** + **Prettier 3.5.3** for code quality
+- **Husky 9.1.7** + **lint-staged 15.5.1** for pre-commit hooks
