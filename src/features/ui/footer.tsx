@@ -37,6 +37,32 @@ function RSSIcon() {
 }
 
 /**
+ * Documentation icon component
+ *
+ * @returns SVG icon for Documentation
+ */
+function DocsIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 2v6h6M16 13H8M16 17H8M10 9H8"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+/**
  * Site footer component
  *
  * Displays social links (GitHub, RSS), build information, and copyright notice.
@@ -54,6 +80,12 @@ export default function Footer() {
   const locale = useLocale()
 
   const socialLinks = [
+    {
+      name: 'docs',
+      href: 'https://dev-roar-lab.github.io/dev-roar-lab-hp/',
+      icon: DocsIcon,
+      isExternal: true
+    },
     {
       name: 'github',
       href: 'https://github.com/dev-roar-lab/dev-roar-lab-hp',

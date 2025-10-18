@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Roar Lab - ドキュメント</title>
+  <meta name="description" content="Dev Roar Labの技術ドキュメントポータル">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>📚 Dev Roar Lab</h1>
+      <p class="subtitle">技術ドキュメントポータル</p>
+    </header>
+
+    <main class="main">
+      <div class="card-grid">
+        <!-- Storybook Card -->
+        <a href="/storybook/" class="card">
+          <div class="card-icon">🎨</div>
+          <h2 class="card-title">UIコンポーネント</h2>
+          <p class="card-description">
+            Storybookで管理されているUIコンポーネントのカタログです。<br>
+            各コンポーネントのプレビューと使用方法を確認できます。
+          </p>
+          <div class="card-footer">
+            <span class="badge">Storybook</span>
+          </div>
+        </a>
+
+        <!-- TypeDoc Card -->
+        <a href="/api/" class="card">
+          <div class="card-icon">📘</div>
+          <h2 class="card-title">API仕様書</h2>
+          <p class="card-description">
+            TypeScriptコードから自動生成されたAPIリファレンスです。<br>
+            関数、型定義、インターフェースの詳細を確認できます。
+          </p>
+          <div class="card-footer">
+            <span class="badge">TypeDoc</span>
+          </div>
+        </a>
+      </div>
+
+      <section class="info-section">
+        <h2>このドキュメントについて</h2>
+        <p>
+          このポータルサイトは、Dev Roar Labプロジェクトの技術ドキュメントを統合的に提供します。
+          各ドキュメントはソースコードから自動生成され、常に最新の状態を保っています。
+        </p>
+        <ul>
+          <li><strong>UIコンポーネント:</strong> React/Next.jsコンポーネントの視覚的なカタログ</li>
+          <li><strong>API仕様書:</strong> TypeScript型定義と関数の技術仕様</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        <a href="https://dev-roar-lab.github.io/" target="_blank" rel="noopener noreferrer">
+          ← メインサイトに戻る
+        </a>
+      </p>
+      <p class="copyright">© 2025 Dev Roar Lab. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>

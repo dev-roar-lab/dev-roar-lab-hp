@@ -53,3 +53,9 @@ cloudformation/parameters/*.json
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Documentation build output
+/docs-site/api
+/docs-site/storybook
+/docs-site/index.html
+/docs-site/assets
