@@ -41,7 +41,10 @@ Resources:
               - IsCrossAccount
               - AWS: !Ref BridgeRoleArn
               - AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
-            Action: sts:AssumeRole
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+              - sts:SetSourceIdentity
       Policies:
         - PolicyName: DeployToS3AndCloudFront
           PolicyDocument:
