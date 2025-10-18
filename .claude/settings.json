@@ -1,32 +1,25 @@
 {
   "permissions": {
     "allow": [
-      "Read",
-      "Glob",
-      "Grep",
-      "Bash(npm:*)",
-      "Bash(git:*)",
-      "Bash(make:*)",
-      "Bash(env:*)",
-      "Edit(/**/*.tsx)",
-      "Edit(/**/*.ts)",
-      "Edit(/**/*.json)",
-      "Edit(/**/*.md)",
-      "Edit(/**/*.mdx)",
-      "Write(/**/*.tsx)",
-      "Write(/**/*.ts)",
-      "Write(/**/*.json)",
-      "Write(/**/*.md)",
-      "Write(/**/*.mdx)",
-      "mcp__playwright__playwright_navigate",
-      "mcp__playwright__playwright_screenshot",
-      "mcp__playwright__playwright_click",
-      "mcp__playwright__playwright_fill",
-      "mcp__playwright__playwright_evaluate",
-      "mcp__playwright__playwright_get_visible_html",
-      "mcp__playwright__playwright_close"
+      "Bash(npm run dev)",
+      "Bash(npm run dev:clean)",
+      "Bash(npm run build)",
+      "Bash(npm run lint)",
+      "Bash(npm run verify-format)",
+      "Bash(npm test)",
+      "Bash(npm run test:coverage)",
+      "Bash(npm run ci)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git pull:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(timeout:*)"
     ],
-    "deny": ["Bash(rm -rf /)", "Bash(rm -rf ~)", "Bash(dd *)", "Bash(mkfs*)", "Edit(~/.ssh/*)", "Edit(/etc/*)"]
-  },
-  "defaultMode": "default"
+    "deny": [],
+    "ask": []
+  }
 }
