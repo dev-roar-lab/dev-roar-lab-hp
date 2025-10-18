@@ -1,6 +1,3 @@
-// TODO ファイル粒度の検討
-// 言語によるコンテンツの切り替え
-
 import Link from 'next/link'
 import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'

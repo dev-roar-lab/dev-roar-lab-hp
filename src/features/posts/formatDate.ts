@@ -1,5 +1,3 @@
-// TODO 要チェック。スターターセットのコード。
-
 export function formatDate(date: string, includeRelative = false) {
   const currentDate = new Date()
   if (!date.includes('T')) {

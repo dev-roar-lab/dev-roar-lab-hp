@@ -1,5 +1,3 @@
-// TODO 要チェック。スターターセットのコード。
-
 type Metadata = {
   title: string
   publishedAt: string
@@ -8,7 +6,6 @@ type Metadata = {
 }
 
 export function parseFrontmatter(fileContent: string) {
-  // TODO 機能確認
   const frontmatterRegex = /---\s*([\s\S]*?)\s*---/
   const match = frontmatterRegex.exec(fileContent)
   const frontMatterBlock = match![1]

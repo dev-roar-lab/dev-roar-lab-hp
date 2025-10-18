@@ -1,4 +1,3 @@
-// TODO 要チェック。スターターセットのコード。
 import fs from 'fs'
 import { parseFrontmatter } from '@/features/posts/parseFrontmatter'
 
