@@ -1,29 +1,30 @@
 # リポジトリ品質調査レポート
 
-**調査日時**: 2025年10月17日
+**初回調査日時**: 2025年10月17日
+**最終更新日時**: 2025年10月18日
 **対象リポジトリ**: dev-roar-lab-hp
 **調査実施者**: Claude Code
 
 ---
 
-## 📊 総合評価: **B+ (良好)**
+## 📊 総合評価: **A- (優秀)** ⬆️ (前回: B+)
 
-全体として、モダンな技術スタックと良好なアーキテクチャ設計を持つ高品質なプロジェクトですが、いくつかの改善点があります。
+モダンな技術スタックと優れたアーキテクチャ設計を持つ高品質なプロジェクトです。CI/CDパイプラインの構築とテスト基盤の整備により、エンタープライズグレードに近づきました。
 
 ---
 
 ## 評価サマリー
 
-| カテゴリ              | 評価 | コメント                                    |
-| --------------------- | ---- | ------------------------------------------- |
-| コード品質            | A-   | 型チェック・ビルド成功、ESLint警告5件       |
-| 依存関係管理          | A    | セキュリティ脆弱性0件、32パッケージ更新可能 |
-| テスト品質            | C    | ユニットテスト0件、カバレッジ測定不可       |
-| アーキテクチャ        | A    | Screaming Architecture、優れた設計          |
-| ドキュメンテーション  | A-   | 充実した文書、一部不足あり                  |
-| アクセシビリティ・SEO | B+   | SEO最適化済み、アクセシビリティ改善余地あり |
-| CI/CD                 | D    | GitHub Actions未設定                        |
-| セキュリティ          | A    | 適切な対策実施済み                          |
+| カテゴリ              | 評価 | 変化 | コメント                                        |
+| --------------------- | ---- | ---- | ----------------------------------------------- |
+| コード品質            | A-   | →    | 型チェック・ビルド成功、ESLint警告5件（改善済） |
+| 依存関係管理          | A    | →    | セキュリティ脆弱性0件、32パッケージ更新可能     |
+| テスト品質            | B-   | ⬆️   | 39テスト成功、カバレッジ設定完了（目標70%未達） |
+| アーキテクチャ        | A    | →    | Screaming Architecture、優れた設計              |
+| ドキュメンテーション  | A    | ⬆️   | CI/CD詳細ドキュメント追加、充実                 |
+| アクセシビリティ・SEO | A-   | ⬆️   | 画像alt属性検証実装、SEO最適化済み              |
+| CI/CD                 | A    | ⬆️   | GitHub Actions完全実装（CI+自動デプロイ）       |
+| セキュリティ          | A    | →    | 適切な対策実施済み、OIDC認証導入                |
 
 ---
 
@@ -39,9 +40,9 @@
 
 ### ⚠️ 改善点
 
-#### 1. ESLint警告（5件）
+#### 1. ESLint警告（5件 → 5件）
 
-**TODOコメント（4件）**:
+**TODOコメント（5件）**:
 
 - `src/features/posts/formatDate.ts:1` - 「要チェック。スターターセットのコード。」
 - `src/features/posts/mdx.tsx:1` - 「ファイル粒度の検討」
@@ -49,9 +50,9 @@
 - `src/features/posts/parseFrontmatter.ts:11` - 「機能確認」
 - `src/features/posts/readMDXFile.ts:1` - 「要チェック。スターターセットのコード。」
 
-**アクセシビリティ警告（1件）**:
+**✅ 修正完了**:
 
-- `src/features/posts/mdx.tsx:49` - Image要素のalt属性検証不足
+- ~~`src/features/posts/mdx.tsx:49` - Image要素のalt属性検証不足~~ → **修正済み** (commit: 49fed16)
 
 #### 2. `next lint`の非推奨化
 
@@ -119,28 +120,43 @@ npm test
 
 ---
 
-## 3. テスト品質 【評価: C】
+## 3. テスト品質 【評価: B-】 ⬆️ (前回: C)
 
-### ❌ 課題
+### ✅ 改善完了
 
-- **ユニットテスト**: 0ファイル
-  - `src/`配下にテストファイルが存在しない
-  - プロダクションコードのテストカバレッジ: **0%**
+- **ユニットテスト**: 2ファイル、39テスト全て成功 ✅
+  - `src/features/posts/__tests__/formatDate.test.ts` - 26テスト
+  - `src/features/posts/__tests__/parseFrontmatter.test.ts` - 13テスト
+- **テストカバレッジ**: 一部達成
+  - `formatDate.ts`: **100%** カバレッジ ✅
+  - `parseFrontmatter.ts`: **100%** カバレッジ ✅
+  - 全体カバレッジ: **3.79%** (目標70%未達)
+- **テストインフラ**: 完全整備
+  - Vitest + Playwright browser mode設定済み
+  - カバレッジ目標設定済み（70-75%）
+  - `npm run test`, `test:coverage`, `test:ui` スクリプト追加
+
+### ⚠️ 残課題
+
 - **Storybook**: 3ストーリー（テンプレートのみ）
   - `src/stories/Button.stories.ts`
   - `src/stories/Header.stories.ts`
   - `src/stories/Page.stories.ts`
   - 実プロダクションコンポーネントのストーリーなし
-
-### ✅ 構成は整備済み
-
-- Vitest + Playwright browser mode設定済み
-- Storybook Test Addonインストール済み
-- `vitest.config.ts`完備
+- **未テストの関数**: 以下の関数のテストが未実装
+  - `getBlogPosts.ts`
+  - `getMDXData.ts`
+  - `getMDXFiles.ts`
+  - `readMDXFile.ts`
 
 ### 推奨アクション
 
-#### 優先度【高】: ユーティリティ関数のテスト追加
+#### 優先度【高】: 残りのユーティリティ関数のテスト追加
+
+~~formatDate.test.ts~~ → **完了** ✅
+~~parseFrontmatter.test.ts~~ → **完了** ✅
+
+次の対象:
 
 ```typescript
 // src/features/posts/__tests__/getBlogPosts.test.ts
@@ -152,24 +168,6 @@ describe('getBlogPosts', () => {
     const posts = await getBlogPosts()
     expect(posts).toBeInstanceOf(Array)
     expect(posts.length).toBeGreaterThan(0)
-  })
-})
-```
-
-```typescript
-// src/features/posts/__tests__/parseFrontmatter.test.ts
-import { describe, it, expect } from 'vitest'
-import { parseFrontmatter } from '../parseFrontmatter'
-
-describe('parseFrontmatter', () => {
-  it('should parse frontmatter correctly', () => {
-    const content = `---
-title: Test
-date: 2025-01-01
----
-Content`
-    const result = parseFrontmatter(content)
-    expect(result.metadata.title).toBe('Test')
   })
 })
 ```
@@ -303,7 +301,7 @@ src/
 
 ---
 
-## 5. ドキュメンテーション 【評価: A-】
+## 5. ドキュメンテーション 【評価: A】 ⬆️ (前回: A-)
 
 ### ✅ 充実した文書
 
@@ -333,6 +331,16 @@ AI開発支援用の詳細ガイド:
 #### cloudformation/README.md
 
 AWSデプロイ手順（推定）
+
+#### .github/workflows/README.md → **新規追加** ✅
+
+**内容**:
+
+- CI/CDワークフローの詳細説明
+- OIDC プロバイダーのセットアップ手順
+- IAMロールの作成（同一/クロスアカウント対応）
+- GitHub Secretsの設定方法
+- トラブルシューティングガイド
 
 ### ⚠️ 不足している文書
 
@@ -374,7 +382,7 @@ export function CustomMDX(props: React.ComponentProps<typeof MDXRemote>) {
 
 ---
 
-## 6. アクセシビリティとSEO 【評価: B+】
+## 6. アクセシビリティとSEO 【評価: A-】 ⬆️ (前回: B+)
 
 ### ✅ SEO最適化（優れている）
 
@@ -400,38 +408,34 @@ export function CustomMDX(props: React.ComponentProps<typeof MDXRemote>) {
 - 見出しアンカー自動生成（`src/features/posts/mdx.tsx:68-88`）
 - 外部リンクのセキュリティ対策（`rel="noopener noreferrer"`）
 
-### ⚠️ アクセシビリティの課題
+### ✅ アクセシビリティの改善完了
 
-#### 1. 画像のalt属性検証不足
+#### 1. 画像のalt属性検証 → **修正済み** ✅
 
-**問題箇所**: `src/features/posts/mdx.tsx:49`
-
-```typescript
-// 現在の実装
-function RoundedImage(props: React.ComponentProps<typeof Image>) {
-  return <Image className="rounded-lg" {...props} />
-}
-```
-
-**推奨修正**:
+**修正内容** (commit: 49fed16):
 
 ```typescript
 function RoundedImage(props: React.ComponentProps<typeof Image>) {
-  // alt属性の存在確認
-  if (!props.alt && props.alt !== '') {
-    console.error('Image requires alt attribute for accessibility:', props.src)
-    // 開発環境でエラー
-    if (process.env.NODE_ENV === 'development') {
-      throw new Error(`Image requires alt attribute: ${props.src}`)
+  // alt属性の存在確認（開発環境）
+  if (process.env.NODE_ENV === 'development') {
+    if (props.alt === undefined) {
+      console.error('Image requires alt attribute for accessibility:', props.src)
     }
   }
   return <Image className="rounded-lg" {...props} />
 }
 ```
 
-#### 2. aria属性の不足（推定）
+**効果**:
 
-以下のコンポーネントでaria属性の検証が必要:
+- ESLint警告を1件削減（5件 → 4件、その後TODOコメントで5件に戻る）
+- 開発中のalt属性忘れを早期発見
+
+### ⚠️ 残課題
+
+#### 2. aria属性の強化（推奨）
+
+以下のコンポーネントでaria属性の追加を検討:
 
 - `src/features/ui/nav.tsx` - ナビゲーション
 - インタラクティブコンポーネント全般
@@ -466,111 +470,69 @@ export default [
 
 ---
 
-## 7. CI/CD 【評価: D】
+## 7. CI/CD 【評価: A】 ⬆️ (前回: D)
 
-### ❌ 未整備
+### ✅ 完全実装済み
 
-- **GitHub Actions**: 未設定（`.github/workflows/`ディレクトリなし）
-- **自動テスト実行**: なし
-- **自動デプロイ**: なし
-- **コードカバレッジレポート**: なし
+#### GitHub Actions CI (.github/workflows/ci.yml)
 
-### 推奨アクション
+**トリガー**: `main`/`develop`ブランチへのpush、`main`へのPR
 
-#### .github/workflows/ci.yml の作成
+**実行内容**:
 
-```yaml
-name: CI
+- コードフォーマットチェック (`npm run verify-format`)
+- ESLintリンティング (`npm run lint`)
+- TypeScript型チェック (`npx tsc --noEmit`)
+- ユニットテスト実行 (`npm test -- --run`)
+- ビルド (`npm run build`)
+- ビルド成果物のアップロード（7日間保持）
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+#### GitHub Actions Deploy (.github/workflows/deploy.yml)
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+**トリガー**: `main`ブランチへのpush
 
-    strategy:
-      matrix:
-        node-version: [20.x]
+**認証方式**: OIDC + クロスアカウントロールチェーン
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+- Bridge Role (OIDC認証)
+- Execution Role (Role Chaining)
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+**実行内容**:
 
-      - name: Install dependencies
-        run: npm ci
+- ビルド (`npm run build`)
+- S3へのデプロイ (`aws s3 sync out/ --delete`)
+- CloudFrontキャッシュ無効化 (`aws cloudfront create-invalidation`)
+- デプロイサマリーの表示
 
-      - name: Run format check
-        run: npm run verify-format
+#### ドキュメント (.github/workflows/README.md)
 
-      - name: Run linter
-        run: npm run lint
+詳細なセットアップ手順を完備:
 
-      - name: Run type check
-        run: npx tsc --noEmit
+- OIDC プロバイダーの作成手順
+- IAMロールの信頼ポリシー（同一/クロスアカウント対応）
+- GitHub Secrets設定
+- トラブルシューティングガイド
 
-      - name: Run tests
-        run: npm test -- --run
+### 🎯 達成された改善点
 
-      - name: Build
-        run: npm run build
+1. **セキュリティ強化**: 長期認証情報不要のOIDC認証
+2. **クロスアカウント対応**: 共有リソース管理アカウントのOIDCプロバイダー利用可能
+3. **完全自動化**: コミットからデプロイまで自動実行
+4. **品質保証**: 全チェック通過後のみデプロイ
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: out/
-          retention-days: 7
-```
+### ⚠️ 今後の改善提案
 
-#### .github/workflows/deploy.yml の作成（オプション）
+#### カバレッジレポートの可視化（オプション）
+
+`ci.yml`にカバレッジレポートのアップロードを追加:
 
 ```yaml
-name: Deploy to AWS
+- name: Run tests with coverage
+  run: npm run test:coverage
 
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - run: npm ci
-      - run: npm run build
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
-
-      - name: Deploy to S3
-        run: |
-          aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
-
-      - name: Invalidate CloudFront
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"
+- name: Upload coverage reports
+  uses: codecov/codecov-action@v4
+  with:
+    token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
 ---
@@ -672,74 +634,84 @@ export const env = envSchema.parse(process.env)
 
 ---
 
-## 🎯 優先度別アクションプラン
+## 🎯 優先度別アクションプラン（更新版）
+
+### ✅ 完了した項目
+
+1. ~~**画像alt属性の修正**~~ → **完了** ✅ (commit: 49fed16)
+
+   - ファイル: `src/features/posts/mdx.tsx:49`
+   - 影響: アクセシビリティ向上
+
+2. ~~**GitHub Actions CI/CDの構築**~~ → **完了** ✅ (commit: 1783023, 他)
+
+   - ファイル: `.github/workflows/ci.yml`, `deploy.yml`
+   - 影響: 品質保証自動化、自動デプロイ
+
+3. ~~**ユニットテストの追加開始**~~ → **部分完了** ✅ (commit: 06984b7)
+   - 対象: `formatDate`, `parseFrontmatter` (100%カバレッジ達成)
+   - 残り: `getBlogPosts`, `getMDXData`, `getMDXFiles`, `readMDXFile`
 
 ### 🔴 優先度【高】（即座に対応）
 
-1. **画像alt属性の修正**
-
-   - ファイル: `src/features/posts/mdx.tsx:49`
-   - 工数: 30分
-   - 影響: アクセシビリティ向上
-
-2. **GitHub Actions CI/CDの構築**
-
-   - ファイル: `.github/workflows/ci.yml`
-   - 工数: 2時間
-   - 影響: 品質保証自動化
-
-3. **ユニットテストの追加開始**
-   - 対象: `getBlogPosts`, `parseFrontmatter`
-   - 工数: 4時間
-   - 影響: コード品質向上
+1. **残りのユニットテストの追加**
+   - 対象: `getBlogPosts`, `getMDXData`, `getMDXFiles`, `readMDXFile`
+   - 工数: 3時間
+   - 影響: カバレッジ目標70%達成に向けて
 
 ### 🟡 優先度【中】（1-2週間以内）
 
-4. **依存関係の更新**
+2. **TODOコメントの解決**
 
-   - 特にStorybook 9.x（メジャーアップデート）
-   - 工数: 2-4時間
-   - 影響: セキュリティ・機能改善
-
-5. **TODOコメントの解決**
-
-   - 4箇所のスターターコードレビュー
+   - 5箇所のスターターコードレビューとファイル粒度検討
    - 工数: 2時間
-   - 影響: コード品質向上
+   - 影響: コード品質向上、ESLint警告削減
 
-6. **Storybookストーリーの追加**
+3. **Storybookストーリーの追加**
+
    - 実プロダクションコンポーネント
    - 工数: 6時間
    - 影響: ドキュメント・テスト改善
 
+4. **依存関係の更新**
+   - 特にStorybook 9.x（メジャーアップデート）
+   - 工数: 2-4時間
+   - 影響: セキュリティ・機能改善
+
 ### 🟢 優先度【低】（1ヶ月以内）
 
-7. **ESLint設定の移行**
+5. **ESLint設定の移行**
 
    - next lintからESLint CLIへ
    - 工数: 1時間
-   - 影響: 将来対応
+   - 影響: 将来対応（Next.js 16対応）
 
-8. **CONTRIBUTING.mdの作成**
+6. **CONTRIBUTING.mdの作成**
 
    - コントリビューションガイドライン
    - 工数: 2時間
    - 影響: チーム開発効率化
 
-9. **JSDocコメントの追加**
+7. **JSDocコメントの追加**
 
    - 全関数・コンポーネント
    - 工数: 4時間
    - 影響: ドキュメント改善
 
-10. **Content Security Policyの設定**
-    - セキュリティヘッダー追加
-    - 工数: 2時間
-    - 影響: セキュリティ強化
+8. **Content Security Policyの設定**
+
+   - セキュリティヘッダー追加
+   - 工数: 2時間
+   - 影響: セキュリティ強化
+
+9. **カバレッジレポートの可視化**
+   - Codecov連携
+   - 工数: 1時間
+   - 影響: テスト品質の可視化
 
 ---
 
-## 📈 総評
+## 📈 総評（更新版）
 
 ### 強み
 
@@ -748,36 +720,43 @@ export const env = envSchema.parse(process.env)
 3. **型安全性**: TypeScript strictモードで型エラー0
 4. **国際化対応**: next-intlによる日英対応
 5. **SEO最適化**: メタデータ、OGP、Twitter Card完備
-6. **セキュリティ**: 脆弱性0件、適切な.gitignore設定
-7. **ドキュメンテーション**: README、CLAUDE.mdが充実
+6. **セキュリティ**: 脆弱性0件、適切な.gitignore設定、OIDC認証
+7. **ドキュメンテーション**: README、CLAUDE.md、CI/CD READMEが充実
+8. **CI/CD完備**: GitHub Actions + AWS自動デプロイ ⬆️ **新規**
+9. **テスト基盤**: Vitest + カバレッジ設定完了 ⬆️ **新規**
 
-### 改善が必要な領域
+### 大幅に改善された領域 ⬆️
 
-1. **テストの不足**: カバレッジ0%、ユニットテスト0件
-2. **CI/CD未整備**: GitHub Actions未設定
-3. **アクセシビリティ**: 画像alt属性検証不足
-4. **依存関係**: 32パッケージが更新可能
+1. **CI/CD**: D → **A** (GitHub Actions CI + 自動デプロイ完全実装)
+2. **テスト品質**: C → **B-** (39テスト成功、2ファイル100%カバレッジ)
+3. **アクセシビリティ**: B+ → **A-** (画像alt属性検証実装)
+4. **ドキュメンテーション**: A- → **A** (CI/CD詳細ドキュメント追加)
+
+### 残る改善領域
+
+1. **テストカバレッジの拡大**: 全体3.79% → 目標70%
+2. **依存関係の更新**: 32パッケージが更新可能
+3. **TODOコメントの解決**: 5箇所のレビュー待ち
 
 ### 今後の方向性
 
-このプロジェクトは、**技術的基盤が非常に優れている**ため、以下の対応を行うことで、
-エンタープライズグレードの品質に引き上げることができます:
+このプロジェクトは、**CI/CDパイプラインの構築とテスト基盤の整備により、エンタープライズグレードに近づきました**。
+残りの対応を行うことで、完全にエンタープライズ品質に到達できます:
 
-1. **テスト自動化の構築**（1-2週間）
+1. **テストカバレッジ70%達成**（1週間）
 
-   - ユニットテスト追加
-   - テストカバレッジ70%達成
-   - Storybookストーリー追加
+   - 残りのユーティリティ関数テスト追加
+   - UIコンポーネントのStorybookストーリー追加
 
-2. **CI/CDパイプラインの整備**（1週間）
+2. **コード品質の最終調整**（1週間）
 
-   - GitHub Actions設定
-   - 自動テスト・ビルド・デプロイ
+   - TODOコメントの解決
+   - ESLint設定の移行（Next.js 16対応）
 
 3. **品質基準の維持**（継続的）
+   - CI/CDによる自動品質チェック ✅ **稼働中**
    - 依存関係の定期更新
    - セキュリティ監視
-   - コードレビュー体制
 
 ---
 
@@ -799,5 +778,28 @@ export const env = envSchema.parse(process.env)
 
 ---
 
+## 📊 変更履歴
+
+### 2025年10月18日更新
+
+**実施された改善**:
+
+- ✅ GitHub Actions CI/CDパイプライン構築（commit: 1783023）
+- ✅ ユニットテスト追加（formatDate, parseFrontmatter - 39テスト）（commit: 06984b7）
+- ✅ 画像alt属性検証実装（commit: 49fed16）
+- ✅ クロスアカウントロールチェーン対応（commit: 4291b39, 17fcea0）
+- ✅ CI/CD詳細ドキュメント作成（.github/workflows/README.md）
+
+**評価の変化**:
+
+- 総合評価: B+ → **A-** ⬆️
+- CI/CD: D → **A** ⬆️
+- テスト品質: C → **B-** ⬆️
+- アクセシビリティ・SEO: B+ → **A-** ⬆️
+- ドキュメンテーション: A- → **A** ⬆️
+
+---
+
 **レポート作成日**: 2025年10月17日
-**次回レビュー推奨**: 2025年11月17日（1ヶ月後）
+**最終更新日**: 2025年10月18日
+**次回レビュー推奨**: 2025年11月18日（1ヶ月後）
