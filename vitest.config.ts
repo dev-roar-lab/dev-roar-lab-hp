@@ -1,4 +1,4 @@
-// import path from 'node:path'
+import path from 'node:path'
 // import { fileURLToPath } from 'node:url'
 
 import { defineConfig } from 'vitest/config'
@@ -9,6 +9,11 @@ import { defineConfig } from 'vitest/config'
 
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
   test: {
     // カバレッジ設定
     coverage: {
