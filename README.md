@@ -366,7 +366,6 @@ src/
 ### 開発ガイド
 
 - 詳細な開発ガイドは [CLAUDE.md](./CLAUDE.md) を参照
-- 品質レポートは [QUALITY_REPORT.md](./QUALITY_REPORT.md) を参照
 
 ---
 
@@ -379,7 +378,6 @@ Private
 ## 📚 関連ドキュメント
 
 - [CLAUDE.md](./CLAUDE.md) - AI開発支援用ガイド
-- [QUALITY_REPORT.md](./QUALITY_REPORT.md) - 品質評価レポート
 - [.github/workflows/README.md](.github/workflows/README.md) - CI/CD詳細ガイド
 - [cloudformation/README.md](./cloudformation/README.md) - AWSインフラ構築ガイド
 
