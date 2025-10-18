@@ -27,7 +27,8 @@
       "Write(/**/*.tsx)",
       "Write(/**/*.json)",
       "Write(/**/*.md)",
-      "Write(/**/*.mdx)"
+      "Write(/**/*.mdx)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
