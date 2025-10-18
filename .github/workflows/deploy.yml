@@ -1,0 +1,64 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to S3
+        run: |
+          echo "Uploading to S3 bucket: ${{ secrets.S3_BUCKET_NAME }}"
+          aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
+
+      - name: Invalidate CloudFront cache
+        id: invalidation
+        run: |
+          echo "Creating CloudFront invalidation for distribution: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}"
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+
+          echo "invalidation-id=$INVALIDATION_ID" >> $GITHUB_OUTPUT
+
+      - name: Deployment summary
+        run: |
+          echo "## Deployment Summary :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| S3 Bucket | \`${{ secrets.S3_BUCKET_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| CloudFront Distribution | \`${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Invalidation ID | \`${{ steps.invalidation.outputs.invalidation-id }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> :hourglass: CloudFront invalidation may take a few minutes to complete." >> $GITHUB_STEP_SUMMARY

@@ -2,6 +2,13 @@
 
 このディレクトリには、Next.js SSGアプリケーションをS3 + CloudFrontでホスティングするためのCloudFormationテンプレートが含まれています。
 
+## テンプレート一覧
+
+| ファイル名                   | 説明                                       | スタック名（推奨）          |
+| ---------------------------- | ------------------------------------------ | --------------------------- |
+| `s3-cloudfront-hosting.yaml` | S3バケット、CloudFront、ログバケットを作成 | `dev-roar-lab-hp`           |
+| `cicd-role.yaml`             | GitHub Actions用のIAMロールを作成          | `dev-roar-lab-hp-cicd-role` |
+
 ## 前提条件
 
 1. AWS CLIがインストールされ、設定されていること
@@ -12,7 +19,9 @@
 
 ## デプロイ手順
 
-### 1. 基本デプロイ（CloudFrontのデフォルトドメインを使用）
+### ステップ1: ホスティング環境のデプロイ
+
+#### 1-1. 基本デプロイ（CloudFrontのデフォルトドメインを使用）
 
 ```bash
 aws cloudformation create-stack \
@@ -22,7 +31,7 @@ aws cloudformation create-stack \
     ParameterKey=ProjectName,ParameterValue=dev-roar-lab-hp
 ```
 
-### 2. カスタムドメインを使用する場合
+#### 1-2. カスタムドメインを使用する場合
 
 ```bash
 aws cloudformation create-stack \
@@ -42,13 +51,56 @@ aws cloudformation create-stack \
 - **エイリアスターゲット**: CloudFrontディストリビューションのドメイン名（Outputsから取得）
 - **ホストゾーンID**: Z2FDTNDATAQYW2（CloudFrontの固定値）
 
-### 3. デプロイ状態の確認
+### ステップ2: GitHub Actions用IAMロールのデプロイ
+
+CI/CDを設定する場合、GitHub ActionsからS3とCloudFrontにアクセスするためのIAMロールを作成します。
+
+**前提条件:**
+
+- OIDCプロバイダーが作成済みであること（詳細は `.github/workflows/README.md` 参照）
+
+```bash
+# S3バケット名とCloudFrontディストリビューションIDを取得
+BUCKET_NAME=$(aws cloudformation describe-stacks \
+  --stack-name dev-roar-lab-hp \
+  --query 'Stacks[0].Outputs[?OutputKey==`WebsiteBucketName`].OutputValue' \
+  --output text)
+
+DISTRIBUTION_ID=$(aws cloudformation describe-stacks \
+  --stack-name dev-roar-lab-hp \
+  --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue' \
+  --output text)
+
+# IAMロールスタックを作成
+aws cloudformation create-stack \
+  --stack-name dev-roar-lab-hp-cicd-role \
+  --template-body file://cloudformation/cicd-role.yaml \
+  --parameters \
+    ParameterKey=ProjectName,ParameterValue=dev-roar-lab-hp \
+    ParameterKey=GitHubOrg,ParameterValue=dev-roar-lab \
+    ParameterKey=GitHubRepo,ParameterValue=dev-roar-lab-hp \
+    ParameterKey=OIDCProviderArn,ParameterValue=arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com \
+    ParameterKey=S3BucketName,ParameterValue=$BUCKET_NAME \
+    ParameterKey=CloudFrontDistributionId,ParameterValue=$DISTRIBUTION_ID \
+  --capabilities CAPABILITY_NAMED_IAM
+```
+
+**IAMロールARNの取得（GitHub Secretsに設定する値）:**
+
+```bash
+aws cloudformation describe-stacks \
+  --stack-name dev-roar-lab-hp-cicd-role \
+  --query 'Stacks[0].Outputs[?OutputKey==`GitHubActionsRoleArn`].OutputValue' \
+  --output text
+```
+
+### ステップ3: デプロイ状態の確認
 
 ```bash
 aws cloudformation describe-stacks --stack-name dev-roar-lab-hp
 ```
 
-### 4. 出力値の取得
+### ステップ4: 出力値の取得
 
 ```bash
 aws cloudformation describe-stacks \
@@ -158,7 +210,7 @@ aws cloudformation delete-stack --stack-name dev-roar-lab-hp
 
 ## リソース構成
 
-このテンプレートで作成されるリソース：
+### `s3-cloudfront-hosting.yaml` で作成されるリソース
 
 1. **S3バケット（Website）** - 静的ファイルを格納
 2. **S3バケット（Logs）** - CloudFrontのアクセスログを保存（90日で自動削除）
@@ -166,6 +218,12 @@ aws cloudformation delete-stack --stack-name dev-roar-lab-hp
 4. **Origin Access Control (OAC)** - S3バケットへの安全なアクセス
 
 **注意**: Route53のDNSレコードは含まれていません。共通のDNS管理で設定してください。
+
+### `cicd-role.yaml` で作成されるリソース
+
+1. **IAMロール（GitHubActionsDeployRole）** - GitHub Actions用のデプロイロール
+   - 信頼ポリシー: OIDCプロバイダー経由でのAssumeRoleを許可
+   - 権限ポリシー: S3バケットへのアクセスとCloudFrontキャッシュ無効化
 
 ## セキュリティ機能
 
