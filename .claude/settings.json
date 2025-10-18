@@ -17,7 +17,17 @@
       "Bash(git pull:*)",
       "Bash(git branch:*)",
       "Bash(git checkout:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Edit(/**/*.ts)",
+      "Edit(/**/*.tsx)",
+      "Edit(/**/*.json)",
+      "Edit(/**/*.md)",
+      "Edit(/**/*.mdx)",
+      "Write(/**/*.ts)",
+      "Write(/**/*.tsx)",
+      "Write(/**/*.json)",
+      "Write(/**/*.md)",
+      "Write(/**/*.mdx)"
     ],
     "deny": [],
     "ask": []
