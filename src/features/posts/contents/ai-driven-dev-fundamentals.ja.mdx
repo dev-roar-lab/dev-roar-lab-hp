@@ -45,11 +45,13 @@ AIツールはこれらの原則を自動的に適用するわけではありま
 AIが生成したコードであっても、品質保証は必須です。むしろ、AIが生成したコードだからこそ、静的解析ツールによる客観的なチェックが重要になります。
 
 **ESLint / Prettier**
+
 ```typescript
 // AIが生成したコードでも、Lintルールによって
 // チームの規約に準拠させる
-export function processData(data: any) { // ❌ any型の使用を禁止
-  return data.map(item => item.value) // ❌ 暗黙的なanyを禁止
+export function processData(data: any) {
+  // ❌ any型の使用を禁止
+  return data.map((item) => item.value) // ❌ 暗黙的なanyを禁止
 }
 
 // Lintルールに準拠した修正版
@@ -77,19 +79,19 @@ AIツールが生産性を向上させる一方で、**継続的インテグレ�
 ```yaml
 # CodePipelineによる自動化フロー
 1. PR作成時
-   - 静的解析（ESLint, Prettier, ruff）
-   - 単体テスト実行（pytest, vitest）
-   - テストカバレッジチェック
+- 静的解析（ESLint, Prettier, ruff）
+- 単体テスト実行（pytest, vitest）
+- テストカバレッジチェック
 
 2. マージ時
-   - ビルド実行
-   - 結合テスト実行
-   - 自動デプロイ（ステージング環境）
+- ビルド実行
+- 結合テスト実行
+- 自動デプロイ（ステージング環境）
 
 3. リリース時
-   - E2Eテスト実行
-   - 本番環境へのデプロイ
-   - Slack通知によるチーム共有
+- E2Eテスト実行
+- 本番環境へのデプロイ
+- Slack通知によるチーム共有
 ```
 
 このパイプラインにより、AIが生成したコードも、人間が書いたコードも、同じ基準で品質チェックを受けることができます。
@@ -138,6 +140,7 @@ AI開発ツールは強力ですが、それだけではプロジェクトは成
 ---
 
 **参考文献・関連リンク**
+
 - SOLID原則: [Wikipedia](https://ja.wikipedia.org/wiki/SOLID)
 - ESLint: [https://eslint.org/](https://eslint.org/)
 - pytest: [https://docs.pytest.org/](https://docs.pytest.org/)
