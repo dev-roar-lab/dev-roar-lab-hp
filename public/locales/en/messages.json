@@ -18,30 +18,42 @@
       "title": "Introduction",
       "description": "As dev-roar-researcher, I have been working as a full-stack engineer for 7 years. I specialize in cloud infrastructure and backend development, focusing on designing and building scalable and reliable systems."
     },
-    "experience": {
-      "title": "Experience",
-      "years": "7+ years of software development experience",
-      "role": "Full-stack engineer working across backend to frontend technologies",
-      "focus": "Cloud infrastructure design, development, and operations using AWS"
+    "career": {
+      "title": "Career Summary",
+      "education": "Started career as a software engineer after studying Information Engineering for 5 years at a Technical College",
+      "firstPosition": {
+        "period": "2019 - 2023 (approx. 4 years)",
+        "role": "Worked on contract development of PLM packages for manufacturing industry",
+        "details": "Developed web applications using C# and JavaScript, built infrastructure and CI/CD environments using AWS (Terraform, CodePipeline), and supported customers' in-house development initiatives"
+      },
+      "currentPosition": {
+        "period": "February 2023 - Present",
+        "role": "System Manager at a financial IT company",
+        "details": "Assigned to the development department for Proprietary Trading System (PTS) and security token market systems. Developed external-facing web systems and back-office operation systems using Python, TypeScript, and Next.js. Led quality assurance initiatives through DevContainer setup, test infrastructure (pytest), and CI/CD implementation"
+      },
+      "expertise": {
+        "title": "Areas of Expertise",
+        "items": "Multi-tenant architecture design (AWS DynamicPolicy, PostgreSQL row-level security), AI-driven development environment promotion centered on Claude Code, implementation-level code generation with custom prompts, technology selection, development standard establishment, and team management"
+      }
     },
     "skills": {
       "title": "Tech Stack",
       "cloud": {
         "title": "Cloud & Infrastructure",
-        "items": "AWS (EC2, Lambda, S3, RDS, CloudFormation, etc.), Docker, Kubernetes"
+        "items": "AWS (DynamoDB, Lambda, S3, RDS, CloudFormation, CodePipeline, Terraform, etc.), Docker, DevContainer"
       },
       "backend": {
         "title": "Backend",
-        "items": "Python (Django, FastAPI, Flask), Node.js, REST API Design, Database Design"
+        "items": "Python (FastAPI, Flask, pytest), Node.js, C#, REST API Design, Database Design (PostgreSQL row-level security)"
       },
       "frontend": {
         "title": "Frontend",
-        "items": "TypeScript, React, Next.js, Tailwind CSS"
+        "items": "TypeScript, React, Next.js, Tailwind CSS, JavaScript"
+      },
+      "devtools": {
+        "title": "Development Tools & Practices",
+        "items": "Claude Code, AI-driven development, CI/CD (CodePipeline), Test automation (pytest), Multi-tenant architecture"
       }
-    },
-    "contact": {
-      "title": "Contact",
-      "description": "For project inquiries or job opportunities, please feel free to reach out via GitHub or the blog comment section."
     }
   },
   "projects": {

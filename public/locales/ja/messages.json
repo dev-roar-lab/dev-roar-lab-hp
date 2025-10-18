@@ -18,30 +18,42 @@
       "title": "はじめに",
       "description": "dev-roar-researcherとして、7年間にわたりフルスタックエンジニアとして活動しています。クラウドインフラストラクチャとバックエンド開発を中心に、スケーラブルで信頼性の高いシステムの設計・構築に携わってきました。"
     },
-    "experience": {
-      "title": "経験",
-      "years": "7年以上のソフトウェア開発経験",
-      "role": "フルスタックエンジニアとして、バックエンドからフロントエンドまで幅広く担当",
-      "focus": "AWSを活用したクラウドインフラストラクチャの設計・構築・運用"
+    "career": {
+      "title": "職務要約",
+      "education": "工業高等専門学校にて情報工学を5年間学習後、ソフトウェアエンジニアとしてのキャリアをスタート",
+      "firstPosition": {
+        "period": "2019年〜2023年(約4年間)",
+        "role": "製造業向けPLMパッケージの受託開発を担当",
+        "details": "C#、JavaScriptを用いたWebアプリケーション開発、AWS (Terraform、CodePipeline) を活用したインフラ構築・CI/CD環境整備、顧客の内製化支援を担当"
+      },
+      "currentPosition": {
+        "period": "2023年2月〜現在",
+        "role": "金融系IT企業のシステムマネージャーとして従事",
+        "details": "私設取引システム(PTS)およびセキュリティトークン市場のシステム開発部に配属。Python、TypeScript、Next.jsを用いた外部向けのWebシステムおよびバックオフィス業務用のシステム開発を担当。DevContainer、テスト基盤(pytest)、CI/CD構築による品質保証を主導"
+      },
+      "expertise": {
+        "title": "専門領域",
+        "items": "マルチテナント設計(AWS DynamicPolicy、PostgreSQL行レベルセキュリティ)、Claude Codeを中心としたAI開発環境の導入推進、カスタムプロンプトによる実装レベルのコード生成、技術選定・開発規約策定・チームマネジメント"
+      }
     },
     "skills": {
       "title": "技術スタック",
       "cloud": {
         "title": "クラウド・インフラストラクチャ",
-        "items": "AWS (EC2, Lambda, S3, RDS, CloudFormation等), Docker, Kubernetes"
+        "items": "AWS (DynamoDB, Lambda, S3, RDS, CloudFormation, CodePipeline, Terraform等), Docker, DevContainer"
       },
       "backend": {
         "title": "バックエンド",
-        "items": "Python (Django, FastAPI, Flask), Node.js, REST API設計, データベース設計"
+        "items": "Python (FastAPI, Flask, pytest), Node.js, C#, REST API設計, データベース設計 (PostgreSQL行レベルセキュリティ)"
       },
       "frontend": {
         "title": "フロントエンド",
-        "items": "TypeScript, React, Next.js, Tailwind CSS"
+        "items": "TypeScript, React, Next.js, Tailwind CSS, JavaScript"
+      },
+      "devtools": {
+        "title": "開発ツール・手法",
+        "items": "Claude Code, AI駆動開発, CI/CD (CodePipeline), テスト自動化 (pytest), マルチテナントアーキテクチャ"
       }
-    },
-    "contact": {
-      "title": "お問い合わせ",
-      "description": "プロジェクトのご相談やお仕事のご依頼は、GitHubまたはブログのコメント欄からお気軽にご連絡ください。"
     }
   },
   "projects": {

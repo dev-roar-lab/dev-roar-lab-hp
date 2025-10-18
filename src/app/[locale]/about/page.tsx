@@ -25,12 +25,27 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         <h2 className="text-xl font-semibold mb-4">{t('intro.title')}</h2>
         <p className="mb-6">{t('intro.description')}</p>
 
-        <h2 className="text-xl font-semibold mb-4 mt-8">{t('experience.title')}</h2>
-        <ul className="list-disc list-inside mb-6 space-y-2">
-          <li>{t('experience.years')}</li>
-          <li>{t('experience.role')}</li>
-          <li>{t('experience.focus')}</li>
-        </ul>
+        <h2 className="text-xl font-semibold mb-4 mt-8">{t('career.title')}</h2>
+        <div className="mb-6 space-y-4">
+          <p>{t('career.education')}</p>
+
+          <div>
+            <h3 className="font-semibold mb-2">{t('career.firstPosition.period')}</h3>
+            <p className="mb-2">{t('career.firstPosition.role')}</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">{t('career.firstPosition.details')}</p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">{t('career.currentPosition.period')}</h3>
+            <p className="mb-2">{t('career.currentPosition.role')}</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">{t('career.currentPosition.details')}</p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">{t('career.expertise.title')}</h3>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">{t('career.expertise.items')}</p>
+          </div>
+        </div>
 
         <h2 className="text-xl font-semibold mb-4 mt-8">{t('skills.title')}</h2>
         <div className="mb-6">
@@ -42,10 +57,10 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
           <h3 className="font-semibold mb-2">{t('skills.frontend.title')}</h3>
           <p className="mb-4">{t('skills.frontend.items')}</p>
-        </div>
 
-        <h2 className="text-xl font-semibold mb-4 mt-8">{t('contact.title')}</h2>
-        <p>{t('contact.description')}</p>
+          <h3 className="font-semibold mb-2">{t('skills.devtools.title')}</h3>
+          <p className="mb-4">{t('skills.devtools.items')}</p>
+        </div>
       </div>
     </section>
   )
