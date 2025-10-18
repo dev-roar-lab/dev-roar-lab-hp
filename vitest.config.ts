@@ -51,7 +51,10 @@ export default defineConfig({
       }
       // Storybook用workspace（一時的に無効化）
       // eslint-disable-next-line no-warning-comments -- 将来の有効化のため意図的にTODOを残す
-      // TODO: Storybook依存関係の問題解決後に有効化
+      // TODO: Next.js 15との互換性問題解決後に有効化
+      // エラー: Cannot find module 'next/dist/build/webpack/plugins/define-env-plugin.js'
+      // @storybook/experimental-nextjs-vite@8.6.12 が Next.js 15.5.4 の内部APIに対応していない
+      // 対応策: Storybookの次期バージョン待ち、または代替テスト方法の検討
       // {
       //   extends: true,
       //   plugins: [

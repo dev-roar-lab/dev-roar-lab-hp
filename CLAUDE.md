@@ -84,7 +84,6 @@ This is a **statically exported Next.js application** (`output: 'export'` in nex
 - **Translation files**: `public/locales/{locale}/messages.json`
 - **Configuration**: `src/i18n/routing.ts` defines locales and creates navigation utilities
 - **Middleware**: `src/middleware.ts` handles locale detection and redirects
-- **Known issue**: There's a TODO in `src/i18n/routing.ts:6` about default locale not working as expected
 
 ### Directory Structure (Screaming Architecture)
 
