@@ -22,7 +22,7 @@ tags: ['C#', 'ASP.NET Core', 'PostgreSQL', 'AWS', 'Terraform', 'CI/CD']
 ### Webアプリケーション開発
 
 - **ASP.NET Core 3.0**を用いたWebアプリケーション開発
-- Arasでは実現できないExcel likeなUIの実装
+- Arasでは実現できないExcel風のUIの実装
 - Aras-Webアプリ間のデータ連携設計・実装
 - **PostgreSQL**を使用したデータ管理
 
@@ -34,9 +34,8 @@ tags: ['C#', 'ASP.NET Core', 'PostgreSQL', 'AWS', 'Terraform', 'CI/CD']
 
 ### CI/CD構築
 
-- **AWS CodePipeline**によるWebアプリの自動デプロイ構築
-- **CodeBuild**でPR発火時の単体テスト自動実行
-- **Slack通知**の実装
+- **AWS CodePipeline**とCodeBuildによるCI/CDパイプライン構築
+- PR作成時の自動テスト・デプロイ、Slack通知の実装
 
 ### 顧客対応
 
@@ -79,7 +78,7 @@ Terraformを活用し、多環境（開発、ステージング、本番）へ�
 
 AWS CodePipelineとCodeBuildを組み合わせ、以下を実現：
 - Webアプリケーションの自動デプロイ
-- PR発火時の単体テスト自動実行
+- PR作成時の単体テスト自動実行
 - Slack通知によるチーム全体への情報共有
 
 デプロイ作業の自動化とテストの自動実行により、品質の安定化とデプロイ頻度の向上を実現しました。
