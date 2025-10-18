@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'IAM role for GitHub Actions CI/CD deployment'
+Description: 'IAM execution role for GitHub Actions CI/CD deployment (cross-account compatible)'
 
 Parameters:
   ProjectName:
@@ -7,19 +7,10 @@ Parameters:
     Description: Project name for resource naming
     Default: dev-roar-lab-hp
 
-  GitHubOrg:
+  BridgeRoleArn:
     Type: String
-    Description: GitHub organization or username
-    Default: dev-roar-lab
-
-  GitHubRepo:
-    Type: String
-    Description: GitHub repository name
-    Default: dev-roar-lab-hp
-
-  OIDCProviderArn:
-    Type: String
-    Description: ARN of the OIDC provider for GitHub Actions (e.g., arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com)
+    Description: ARN of the bridge role in the shared resource account that will assume this role (e.g., arn:aws:iam::123456789012:role/bridge-role). Leave empty for same-account setup.
+    Default: ''
 
   S3BucketName:
     Type: String
@@ -29,26 +20,28 @@ Parameters:
     Type: String
     Description: CloudFront Distribution ID for cache invalidation
 
+Conditions:
+  IsCrossAccount: !Not [!Equals [!Ref BridgeRoleArn, '']]
+
 Resources:
   # IAM Role for GitHub Actions
   GitHubActionsRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       RoleName: !Sub '${ProjectName}-GitHubActionsDeployRole'
-      Description: IAM role for GitHub Actions to deploy to S3 and invalidate CloudFront
+      Description: IAM execution role for GitHub Actions to deploy to S3 and invalidate CloudFront
       MaxSessionDuration: 3600
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
           - Effect: Allow
-            Principal:
-              Federated: !Ref OIDCProviderArn
-            Action: sts:AssumeRoleWithWebIdentity
-            Condition:
-              StringEquals:
-                token.actions.githubusercontent.com:aud: sts.amazonaws.com
-              StringLike:
-                token.actions.githubusercontent.com:sub: !Sub 'repo:${GitHubOrg}/${GitHubRepo}:ref:refs/heads/main'
+            Principal: !If
+              - IsCrossAccount
+              - AWS: !Ref BridgeRoleArn
+              - AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+            Action: sts:AssumeRole
       Policies:
         - PolicyName: DeployToS3AndCloudFront
           PolicyDocument:
@@ -77,13 +70,13 @@ Resources:
 
 Outputs:
   GitHubActionsRoleArn:
-    Description: ARN of the IAM role for GitHub Actions (use this value in GitHub Secrets as AWS_ROLE_ARN)
+    Description: ARN of the IAM execution role for GitHub Actions (use this value in GitHub Secrets as AWS_EXECUTION_ROLE_ARN)
     Value: !GetAtt GitHubActionsRole.Arn
     Export:
       Name: !Sub '${AWS::StackName}-RoleArn'
 
   GitHubActionsRoleName:
-    Description: Name of the IAM role for GitHub Actions
+    Description: Name of the IAM execution role for GitHub Actions
     Value: !Ref GitHubActionsRole
     Export:
       Name: !Sub '${AWS::StackName}-RoleName'

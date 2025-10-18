@@ -28,11 +28,18 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Configure AWS credentials with OIDC
+      - name: Configure AWS credentials (Bridge Role)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_BRIDGE_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Assume execution role (Role Chaining)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_EXECUTION_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-chaining: true
 
       - name: Deploy to S3
         run: |
