@@ -2,6 +2,38 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## MCP Tool Usage Guidelines
+
+### Code Search - Use Serena MCP
+
+When searching or analyzing source code in this repository, **ALWAYS use the Serena MCP tools** (`mcp__serena__*`):
+
+- `mcp__serena__find_symbol` - Find classes, functions, methods by name
+- `mcp__serena__search_for_pattern` - Search for code patterns with regex
+- `mcp__serena__get_symbols_overview` - Get overview of symbols in a file
+- `mcp__serena__find_referencing_symbols` - Find references to a symbol
+- `mcp__serena__list_dir` - List directory contents
+- `mcp__serena__find_file` - Find files by name pattern
+
+**Do NOT use** basic tools like `Grep`, `Glob`, or `Read` for code exploration. Serena provides semantic code understanding and is more efficient.
+
+### AWS Knowledge - Use AWS Knowledge MCP
+
+When researching AWS services, APIs, or CloudFormation resources, **use the AWS Knowledge MCP tools** (`mcp__aws-knowlege__*`):
+
+- `mcp__aws-knowlege__aws___search_documentation` - Search AWS documentation
+- `mcp__aws-knowlege__aws___read_documentation` - Read specific AWS docs pages
+- `mcp__aws-knowlege__aws___get_regional_availability` - Check AWS service availability by region
+- `mcp__aws-knowlege__aws___recommend` - Get related AWS documentation
+- `mcp__aws-knowlege__aws___list_regions` - List all AWS regions
+
+Use these tools when:
+
+- Verifying AWS API specifications
+- Checking CloudFormation resource properties
+- Understanding AWS service capabilities
+- Planning multi-region deployments
+
 ## Development Commands
 
 ### Core Development
