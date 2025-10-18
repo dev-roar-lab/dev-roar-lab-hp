@@ -7,7 +7,7 @@
     "dev:clean": "rm -rf .next && TURBOPACK_CACHE_DISABLED=1 next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "verify-format": "prettier src/ -c",
     "test": "vitest",
     "test:ui": "vitest --ui",
