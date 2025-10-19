@@ -59,3 +59,6 @@ cloudformation/parameters/*.json
 /docs-site/storybook
 /docs-site/index.html
 /docs-site/assets
+
+# Playwright screenshots
+/playwright-screenshots/*.png

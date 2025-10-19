@@ -34,6 +34,22 @@ Use these tools when:
 - Understanding AWS service capabilities
 - Planning multi-region deployments
 
+### Playwright - Browser Automation
+
+When using Playwright MCP tools for browser automation and testing:
+
+**Screenshot Storage**: Always save screenshots to the `playwright-screenshots/` directory (relative to repository root) using the `downloadsDir` parameter. PNG files in this directory are automatically ignored by git.
+
+Example:
+
+```typescript
+await mcp__playwright__playwright_screenshot({
+  name: 'screenshot-name',
+  downloadsDir: './playwright-screenshots',
+  savePng: true
+})
+```
+
 ## Development Commands
 
 ### Core Development
