@@ -21,7 +21,12 @@
       },
       "cat_skills": {
         "command": "cat specialties.txt",
-        "output": ["React | Next.js | TypeScript", "Python | FastAPI | pytest", "AWS | Docker | Terraform"]
+        "output": [
+          "React      | Next.js     | TypeScript",
+          "Python     | C#          | Docker",
+          "AWS        | Terraform   | pytest",
+          "Git        | Claude Code | CI/CD"
+        ]
       },
       "ls_links": {
         "command": "ls -la ~/links",

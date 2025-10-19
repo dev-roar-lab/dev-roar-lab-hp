@@ -100,13 +100,16 @@ function OutputLine({ content }: { content: string }) {
   if (linkMatch) {
     const path = linkMatch[1]
     return (
-      <Link href={`/${path}`} className="font-mono text-sm text-blue-600 dark:text-blue-400 hover:underline block">
+      <Link
+        href={`/${path}`}
+        className="font-mono text-sm text-blue-600 dark:text-blue-400 hover:underline block whitespace-pre"
+      >
         {content}
       </Link>
     )
   }
 
-  return <div className="font-mono text-sm text-neutral-700 dark:text-neutral-300">{content}</div>
+  return <div className="font-mono text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre">{content}</div>
 }
 
 export function TerminalWindow({ commands, prompt = 'user@dev-roar-lab:~$' }: TerminalWindowProps) {
