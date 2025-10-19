@@ -22,7 +22,7 @@
       "cat_skills": {
         "command": "cat specialties.txt",
         "output": [
-          "React      | Next.js     | TypeScript",
+          "Playwright | Next.js     | TypeScript",
           "Python     | C#          | Docker",
           "AWS        | Terraform   | CloudFormation",
           "Git        | Claude Code | CI/CD"
@@ -59,23 +59,7 @@
       }
     },
     "skills": {
-      "title": "Tech Stack",
-      "cloud": {
-        "title": "Cloud & Infrastructure",
-        "items": "AWS (DynamoDB, Lambda, S3, RDS, CloudFormation, CodePipeline, Terraform, etc.), Docker, DevContainer"
-      },
-      "backend": {
-        "title": "Backend",
-        "items": "Python (FastAPI, Flask, pytest), Node.js, C#, REST API Design, Database Design (PostgreSQL row-level security)"
-      },
-      "frontend": {
-        "title": "Frontend",
-        "items": "TypeScript, React, Next.js, Tailwind CSS, JavaScript"
-      },
-      "devtools": {
-        "title": "Development Tools & Practices",
-        "items": "Claude Code, AI-driven development, CI/CD (CodePipeline), Test automation (pytest), Multi-tenant architecture"
-      }
+      "title": "Tech Stack"
     }
   },
   "projects": {

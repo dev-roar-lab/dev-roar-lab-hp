@@ -18,7 +18,10 @@ import {
   SiTailwindcss,
   SiGit,
   SiKubernetes,
-  SiTerraform
+  SiTerraform,
+  SiClaude,
+  SiAnthropic,
+  SiSharp
 } from 'react-icons/si'
 
 export interface TechInfo {
@@ -38,6 +41,7 @@ export const techIconMap: Record<string, TechInfo> = {
   Python: { icon: SiPython, color: '#3776AB' },
   TypeScript: { icon: SiTypescript, color: '#3178C6' },
   JavaScript: { icon: SiJavascript, color: '#F7DF1E' },
+  'C#': { icon: SiSharp, color: '#239120' },
 
   // Frontend
   React: { icon: SiReact, color: '#61DAFB' },
@@ -60,6 +64,11 @@ export const techIconMap: Record<string, TechInfo> = {
   'GitHub Actions': { icon: SiGithubactions, color: '#2088FF' },
   Git: { icon: SiGit, color: '#F05032' },
   Cloudflare: { icon: SiCloudflare, color: '#F38020' },
+
+  // AI & Development Tools
+  'Claude Code': { icon: SiClaude, color: '#CC9B7A' },
+  Claude: { icon: SiClaude, color: '#CC9B7A' },
+  Anthropic: { icon: SiAnthropic, color: '#CC9B7A' },
 
   // CI/CD
   'CI/CD': { icon: SiGithubactions, color: '#2088FF' }

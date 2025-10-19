@@ -2,13 +2,26 @@
 
 import { TechBadges } from './techBadge'
 
-const skills = ['AWS', 'Python', 'TypeScript', 'React', 'Next.js', 'Docker', 'Node.js']
+const skills = [
+  'Playwright',
+  'Next.js',
+  'TypeScript',
+  'Python',
+  'C#',
+  'Docker',
+  'AWS',
+  'Terraform',
+  'CloudFormation',
+  'Git',
+  'Claude Code',
+  'CI/CD'
+]
 
 /**
  * Pre-configured skill badges component
  *
  * Displays a fixed list of primary technology skills as badges.
- * The skills list includes: AWS, Python, TypeScript, React, Next.js, Docker, and Node.js.
+ * The skills list matches the specialties shown in the terminal on the homepage.
  *
  * @returns Collection of skill badges
  *

@@ -22,7 +22,7 @@
       "cat_skills": {
         "command": "cat specialties.txt",
         "output": [
-          "React      | Next.js     | TypeScript",
+          "Playwright | Next.js     | TypeScript",
           "Python     | C#          | Docker",
           "AWS        | Terraform   | CloudFormation",
           "Git        | Claude Code | CI/CD"
@@ -59,23 +59,7 @@
       }
     },
     "skills": {
-      "title": "技術スタック",
-      "cloud": {
-        "title": "クラウド・インフラストラクチャ",
-        "items": "AWS (DynamoDB, Lambda, S3, RDS, CloudFormation, CodePipeline, Terraform等), Docker, DevContainer"
-      },
-      "backend": {
-        "title": "バックエンド",
-        "items": "Python (FastAPI, Flask, pytest), Node.js, C#, REST API設計, データベース設計 (PostgreSQL行レベルセキュリティ)"
-      },
-      "frontend": {
-        "title": "フロントエンド",
-        "items": "TypeScript, React, Next.js, Tailwind CSS, JavaScript"
-      },
-      "devtools": {
-        "title": "開発ツール・手法",
-        "items": "Claude Code, AI駆動開発, CI/CD (CodePipeline), テスト自動化 (pytest), マルチテナントアーキテクチャ"
-      }
+      "title": "技術スタック"
     }
   },
   "projects": {
