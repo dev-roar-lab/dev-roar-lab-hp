@@ -24,7 +24,7 @@
         "output": [
           "React      | Next.js     | TypeScript",
           "Python     | C#          | Docker",
-          "AWS        | Terraform   | pytest",
+          "AWS        | Terraform   | CloudFormation",
           "Git        | Claude Code | CI/CD"
         ]
       },
