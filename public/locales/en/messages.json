@@ -6,7 +6,7 @@
     "intro": "A full-stack engineer with 7 years of experience, specializing in scalable system design and cloud infrastructure with AWS and Python. Proficient across the entire technology stack from backend to frontend, I am passionate about building software that delivers real business value.",
     "viewMore": "View More",
     "skills": {
-      "title": "Key Skills"
+      "title": "Core Skills"
     },
     "blog": {
       "title": "Latest Posts"
@@ -36,13 +36,13 @@
     "title": "About",
     "intro": {
       "title": "Introduction",
-      "description": "I am dev-roar-researcher, a researcher affiliated with dev-roar-lab. I have been working as a full-stack engineer for approximately 7 years. I specialize in cloud infrastructure and backend development, focusing on designing and building scalable and reliable systems."
+      "description": "I am dev-roar-researcher, a researcher affiliated with dev-roar-lab. I have been working as a full-stack engineer. I specialize in cloud infrastructure and backend development, focusing on designing and building scalable and reliable systems."
     },
     "career": {
       "title": "Career Summary",
       "education": "Studied Information Engineering for 5 years at a National Institute of Technology and started my career as a software engineer",
       "firstPosition": {
-        "period": "2019 - 2023 (approx. 4 years)",
+        "period": "2019 - 2023",
         "role": "Worked on contract development of PLM packages for manufacturing industry",
         "details": "Developed web applications using C# and JavaScript, built infrastructure and CI/CD environments using AWS (Terraform, CodePipeline), and supported customers' in-house development initiatives"
       },
