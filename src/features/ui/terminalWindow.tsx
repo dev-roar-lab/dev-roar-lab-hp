@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from '@/i18n/routing'
 
 interface Command {
@@ -51,15 +51,21 @@ function TypeWriter({ text, onComplete }: { text: string; onComplete?: () => voi
   const [displayedText, setDisplayedText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  // textが変わったら状態をリセット
+  useEffect(() => {
+    setDisplayedText('')
+    setCurrentIndex(0)
+  }, [text])
+
   useEffect(() => {
     if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
         setDisplayedText((prev) => prev + text[currentIndex])
         setCurrentIndex((prev) => prev + 1)
-      }, 50) // タイピング速度（ミリ秒）
+      }, 80) // タイピング速度を少し遅く（よりリアルに）
 
       return () => clearTimeout(timeout)
-    } else if (onComplete) {
+    } else if (currentIndex === text.length && onComplete) {
       onComplete()
     }
   }, [currentIndex, text, onComplete])
@@ -104,20 +110,48 @@ function OutputLine({ content }: { content: string }) {
 }
 
 export function TerminalWindow({ commands, prompt = 'user@dev-roar-lab:~$' }: TerminalWindowProps) {
+  const [isLoading, setIsLoading] = useState(true)
   const [currentCommandIndex, setCurrentCommandIndex] = useState(0)
   const [showOutput, setShowOutput] = useState(false)
+  const nextCommandTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    // 初期ローディング（ターミナル起動のシミュレーション）
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false)
+    }, 800) // 800msのローディング時間
+
+    return () => clearTimeout(loadingTimer)
+  }, [])
+
+  useEffect(() => {
+    // クリーンアップ時にタイマーをクリア
+    return () => {
+      if (nextCommandTimerRef.current) {
+        clearTimeout(nextCommandTimerRef.current)
+      }
+    }
+  }, [])
 
   const handleCommandComplete = () => {
-    // コマンド入力完了後、出力を表示
+    // コマンド入力完了後、出力を即座に表示
     setShowOutput(true)
 
-    // 次のコマンドへ移行（遅延あり）
-    setTimeout(() => {
+    const delay = commands[currentCommandIndex]?.delay || 100
+
+    // 既存のタイマーをクリア（重複実行を防ぐ）
+    if (nextCommandTimerRef.current) {
+      clearTimeout(nextCommandTimerRef.current)
+    }
+
+    // 次のコマンドへ移行
+    nextCommandTimerRef.current = setTimeout(() => {
       if (currentCommandIndex < commands.length - 1) {
         setCurrentCommandIndex((prev) => prev + 1)
         setShowOutput(false)
+        nextCommandTimerRef.current = null
       }
-    }, commands[currentCommandIndex]?.delay || 1500)
+    }, delay)
   }
 
   const currentCommand = commands[currentCommandIndex]
@@ -134,44 +168,66 @@ export function TerminalWindow({ commands, prompt = 'user@dev-roar-lab:~$' }: Te
         <TerminalHeader />
 
         <div className="p-6 min-h-[400px] bg-neutral-50 dark:bg-neutral-950">
-          {/* 過去のコマンド */}
-          {commands.slice(0, currentCommandIndex).map((cmd, index) => (
-            <div key={index} className="mb-4">
-              <div className="font-mono text-sm">
-                <span className="text-green-500 dark:text-green-400">{cmd.prompt || prompt}</span> {cmd.command}
-              </div>
-              {Array.isArray(cmd.output) ? (
-                cmd.output.map((line, i) => <OutputLine key={i} content={line} />)
-              ) : (
-                <OutputLine content={cmd.output} />
-              )}
-            </div>
-          ))}
-
-          {/* 現在のコマンド */}
-          {currentCommand && (
-            <div className="mb-4">
-              <CommandLine
-                command={currentCommand.command}
-                prompt={currentCommand.prompt || prompt}
-                showCursor={!showOutput && isLastCommand}
-                onComplete={handleCommandComplete}
-              />
-              {showOutput &&
-                (Array.isArray(currentCommand.output) ? (
-                  currentCommand.output.map((line, i) => <OutputLine key={i} content={line} />)
-                ) : (
-                  <OutputLine content={currentCommand.output} />
-                ))}
-            </div>
-          )}
-
-          {/* 最後のコマンド完了時のカーソル */}
-          {isLastCommand && showOutput && (
-            <div className="font-mono text-sm">
-              <span className="text-green-500 dark:text-green-400">{prompt}</span>
+          {isLoading ? (
+            /* ローディングアニメーション */
+            <div className="flex items-center gap-2 font-mono text-sm text-neutral-600 dark:text-neutral-400">
+              <motion.span
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                Initializing terminal...
+              </motion.span>
               <Cursor />
             </div>
+          ) : (
+            <>
+              {/* 過去のコマンド */}
+              {commands.slice(0, currentCommandIndex).map((cmd, index) => (
+                <div key={index} className="mb-4">
+                  <div className="font-mono text-sm">
+                    <span className="text-green-500 dark:text-green-400">{cmd.prompt || prompt}</span> {cmd.command}
+                  </div>
+                  {Array.isArray(cmd.output) ? (
+                    cmd.output.map((line, i) => <OutputLine key={i} content={line} />)
+                  ) : (
+                    <OutputLine content={cmd.output} />
+                  )}
+                </div>
+              ))}
+
+              {/* 現在のコマンド */}
+              {currentCommand && (
+                <div className="mb-4">
+                  <CommandLine
+                    command={currentCommand.command}
+                    prompt={currentCommand.prompt || prompt}
+                    showCursor={!showOutput && isLastCommand}
+                    onComplete={handleCommandComplete}
+                  />
+                  {showOutput &&
+                    (Array.isArray(currentCommand.output) ? (
+                      currentCommand.output.map((line, i) => <OutputLine key={i} content={line} />)
+                    ) : (
+                      <OutputLine content={currentCommand.output} />
+                    ))}
+                </div>
+              )}
+
+              {/* コマンド実行後のプロンプト表示 */}
+              {showOutput && !isLastCommand && (
+                <div className="font-mono text-sm">
+                  <span className="text-green-500 dark:text-green-400">{prompt}</span>
+                </div>
+              )}
+
+              {/* 最後のコマンド完了時のカーソル */}
+              {isLastCommand && showOutput && (
+                <div className="font-mono text-sm">
+                  <span className="text-green-500 dark:text-green-400">{prompt}</span>
+                  <Cursor />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

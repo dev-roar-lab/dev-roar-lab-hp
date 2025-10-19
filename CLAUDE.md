@@ -38,16 +38,38 @@ Use these tools when:
 
 When using Playwright MCP tools for browser automation and testing:
 
+**Headless Mode**: Always run Playwright in headless mode (`headless: true`) for debugging and testing. This ensures consistent behavior and allows running in CI/CD environments.
+
 **Screenshot Storage**: Always save screenshots to the `playwright-screenshots/` directory (relative to repository root) using the `downloadsDir` parameter. PNG files in this directory are automatically ignored by git.
 
-Example:
+**Cleanup Before Commit**: Before committing changes, always clean up the `playwright-screenshots/` directory to avoid committing temporary test artifacts. The directory itself should be kept (with `.gitkeep`), but all screenshot files should be removed.
+
+Example usage:
 
 ```typescript
+// Navigate with headless mode
+await mcp__playwright__playwright_navigate({
+  url: 'http://localhost:3000',
+  headless: true
+})
+
+// Take screenshot
 await mcp__playwright__playwright_screenshot({
   name: 'screenshot-name',
   downloadsDir: './playwright-screenshots',
-  savePng: true
+  savePng: true,
+  fullPage: true
 })
+
+// Close browser when done
+await mcp__playwright__playwright_close()
+```
+
+Cleanup command before commit:
+
+```bash
+# Remove all screenshots but keep directory
+rm playwright-screenshots/*.png
 ```
 
 ## Development Commands

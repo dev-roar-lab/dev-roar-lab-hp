@@ -20,17 +20,17 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
     {
       command: t('terminal.commands.whoami.command'),
       output: t('terminal.commands.whoami.output'),
-      delay: 1500
+      delay: 3000 // 次のコマンドまで3秒待機
     },
     {
       command: t('terminal.commands.cat_skills.command'),
       output: t.raw('terminal.commands.cat_skills.output') as string[],
-      delay: 2000
+      delay: 3000 // 次のコマンドまで3秒待機
     },
     {
       command: t('terminal.commands.ls_links.command'),
-      output: t.raw('terminal.commands.ls_links.output') as string[],
-      delay: 3000
+      output: t.raw('terminal.commands.ls_links.output') as string[]
+      // 最後のコマンドなのでdelayは不要
     }
   ]
 
