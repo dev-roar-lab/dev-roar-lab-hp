@@ -58,5 +58,11 @@
   },
   "projects": {
     "title": "Projects"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "ariaLabel": "Select theme"
   }
 }

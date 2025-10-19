@@ -88,7 +88,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={cx(GeistSans.variable, GeistMono.variable)} suppressHydrationWarning>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white text-black dark:bg-black dark:text-white">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
               <Navbar />
