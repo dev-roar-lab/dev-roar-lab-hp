@@ -12,6 +12,23 @@
       "title": "最新記事"
     }
   },
+  "terminal": {
+    "prompt": "user@dev-roar-lab:~$",
+    "commands": {
+      "whoami": {
+        "command": "whoami",
+        "output": "フルスタックエンジニア | クラウドアーキテクト"
+      },
+      "cat_skills": {
+        "command": "cat specialties.txt",
+        "output": ["React | Next.js | TypeScript", "Python | FastAPI | pytest", "AWS | Docker | Terraform"]
+      },
+      "ls_links": {
+        "command": "ls -la ~/links",
+        "output": ["blog/", "projects/", "about/"]
+      }
+    }
+  },
   "about": {
     "title": "About",
     "intro": {

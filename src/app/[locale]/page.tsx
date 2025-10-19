@@ -1,23 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { BlogPosts } from '@/features/blog/blogPosts'
 import { routing } from '@/i18n/routing'
-import { Link } from '@/i18n/routing'
 import { HomePageContent } from '@/features/ui/homePageContent'
-import { SkillBadges } from '@/features/ui/skillBadge'
+import { TerminalWindow } from '@/features/ui/terminalWindow'
+import { ParticleNetwork } from '@/features/ui/particleNetwork'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
-}
-
-function ArrowIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M2.07102 11.3494L0.963068 10.2415L9.2017 1.98864H2.83807L2.85227 0.454545H11.8438V9.46023H10.2955L10.3097 3.09659L2.07102 11.3494Z"
-        fill="currentColor"
-      />
-    </svg>
-  )
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
@@ -27,36 +15,34 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   setRequestLocale(locale)
 
   const t = await getTranslations()
+
+  // ターミナルコマンドの定義
+  const commands = [
+    {
+      command: t('terminal.commands.whoami.command'),
+      output: t('terminal.commands.whoami.output'),
+      delay: 1500
+    },
+    {
+      command: t('terminal.commands.cat_skills.command'),
+      output: t.raw('terminal.commands.cat_skills.output') as string[],
+      delay: 2000
+    },
+    {
+      command: t('terminal.commands.ls_links.command'),
+      output: t.raw('terminal.commands.ls_links.output') as string[],
+      delay: 3000
+    }
+  ]
+
   return (
     <HomePageContent>
-      <section>
-        {/* Hero Section */}
-        <div className="mb-16">
-          <h1 className="mb-3 text-4xl font-bold tracking-tighter">{t('home.title')}</h1>
-          <p className="mb-4 text-xl text-neutral-600 dark:text-neutral-400">{t('home.subtitle')}</p>
-          <p className="mb-8 text-neutral-700 dark:text-neutral-300 leading-relaxed">{t('home.intro')}</p>
+      {/* 背景パーティクル */}
+      <ParticleNetwork particleCount={60} maxDistance={120} speed={0.2} />
 
-          {/* About Link - CTA Button */}
-          <Link
-            href="/about"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium hover:bg-neutral-700 dark:hover:bg-neutral-300 transition-all shadow-sm hover:shadow-md"
-          >
-            <span>{t('home.viewMore')}</span>
-            <ArrowIcon />
-          </Link>
-        </div>
-
-        {/* Skills Section */}
-        <div className="mb-16">
-          <h2 className="text-xl font-semibold mb-4 tracking-tighter">{t('home.skills.title')}</h2>
-          <SkillBadges />
-        </div>
-
-        {/* Blog Posts Section */}
-        <div>
-          <h2 className="text-xl font-semibold mb-6 tracking-tighter">{t('home.blog.title')}</h2>
-          <BlogPosts locale={locale} />
-        </div>
+      {/* メインコンテンツ */}
+      <section className="relative flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <TerminalWindow commands={commands} prompt={t('terminal.prompt')} />
       </section>
     </HomePageContent>
   )
