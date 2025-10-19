@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "TURBOPACK_CACHE_DISABLED=1 next dev --turbopack",
     "dev:clean": "rm -rf .next && TURBOPACK_CACHE_DISABLED=1 next dev --turbopack",
-    "build": "next build",
+    "build": "next build && npm run postbuild",
+    "postbuild": "cp out/ja/index.html out/index.html",
     "start": "next start",
     "lint": "eslint .",
     "verify-format": "prettier src/ -c",

@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
 
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: 'export',
@@ -13,6 +15,5 @@ const nextConfig: NextConfig = {
   // 静的エクスポート用のトレーリングスラッシュ設定
   trailingSlash: true
 }
-const withNextIntl = createNextIntlPlugin()
 
 export default withNextIntl(nextConfig)
