@@ -23,7 +23,7 @@ export function ParticleNetwork({
   particleCount = 50,
   maxDistance = 150,
   particleSize = 2,
-  lineOpacity = 0.15,
+  lineOpacity = 0.08,
   speed = 0.3
 }: ParticleNetworkProps) {
   const [particles, setParticles] = useState<Particle[]>([])
@@ -140,7 +140,7 @@ export function ParticleNetwork({
             fill="currentColor"
             className="text-blue-500 dark:text-blue-400"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
+            animate={{ opacity: 0.3 }}
             transition={{ duration: 1 }}
           />
         ))}

@@ -93,10 +93,13 @@ export default async function RootLayout({
           <NextIntlClientProvider locale={locale} messages={messages}>
             {/* 背景パーティクル - 全ページ共通 */}
             <ParticleNetwork particleCount={60} maxDistance={120} speed={0.2} />
-            <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-              <Navbar />
-              {children}
-              <Footer />
+            <main className="relative flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+              <div className="absolute inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm -mx-2 md:mx-0 rounded-lg" />
+              <div className="relative z-10">
+                <Navbar />
+                {children}
+                <Footer />
+              </div>
             </main>
           </NextIntlClientProvider>
         </ThemeProvider>
