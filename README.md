@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🦁 Dev Roar Lab HP
+# 🐶 Dev Roar Lab HP
 
 **モダンでスケーラブルなポートフォリオ兼ブログサイト**
 
