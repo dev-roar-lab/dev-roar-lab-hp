@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { HomePageContent } from '@/features/ui/homePageContent'
 import { TerminalWindow } from '@/features/ui/terminalWindow'
+import { formatSkillsForTerminal } from '@/lib/skills'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -24,7 +25,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
     },
     {
       command: t('terminal.commands.cat_skills.command'),
-      output: t.raw('terminal.commands.cat_skills.output') as string[],
+      output: formatSkillsForTerminal(),
       delay: 3000 // 次のコマンドまで3秒待機
     },
     {

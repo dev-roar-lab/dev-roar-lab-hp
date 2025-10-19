@@ -1,21 +1,7 @@
 'use client'
 
 import { TechBadges } from './techBadge'
-
-const skills = [
-  'Playwright',
-  'Next.js',
-  'TypeScript',
-  'Python',
-  'C#',
-  'Docker',
-  'AWS',
-  'Terraform',
-  'CloudFormation',
-  'Git',
-  'Claude Code',
-  'CI/CD'
-]
+import { SKILLS } from '@/lib/skills'
 
 /**
  * Pre-configured skill badges component
@@ -32,5 +18,5 @@ const skills = [
  * ```
  */
 export function SkillBadges() {
-  return <TechBadges techs={skills} size="md" />
+  return <TechBadges techs={[...SKILLS]} size="md" />
 }

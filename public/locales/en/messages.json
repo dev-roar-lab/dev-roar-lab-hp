@@ -20,13 +20,7 @@
         "output": "Full-stack Developer | Cloud Architect"
       },
       "cat_skills": {
-        "command": "cat specialties.txt",
-        "output": [
-          "Playwright | Next.js     | TypeScript",
-          "Python     | C#          | Docker",
-          "AWS        | Terraform   | CloudFormation",
-          "Git        | Claude Code | CI/CD"
-        ]
+        "command": "cat core-skills.txt"
       },
       "ls_links": {
         "command": "ls -la ~/links",
@@ -59,7 +53,7 @@
       }
     },
     "skills": {
-      "title": "Tech Stack"
+      "title": "Core Skills"
     }
   },
   "projects": {

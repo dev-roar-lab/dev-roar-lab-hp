@@ -20,13 +20,7 @@
         "output": "フルスタックエンジニア | クラウドアーキテクト"
       },
       "cat_skills": {
-        "command": "cat specialties.txt",
-        "output": [
-          "Playwright | Next.js     | TypeScript",
-          "Python     | C#          | Docker",
-          "AWS        | Terraform   | CloudFormation",
-          "Git        | Claude Code | CI/CD"
-        ]
+        "command": "cat core-skills.txt"
       },
       "ls_links": {
         "command": "ls -la ~/links",
@@ -59,7 +53,7 @@
       }
     },
     "skills": {
-      "title": "技術スタック"
+      "title": "コアスキル"
     }
   },
   "projects": {
