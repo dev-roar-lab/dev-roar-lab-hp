@@ -2,12 +2,12 @@
 title: '金融取引システムの立ち上げ及び運用'
 publishedAt: '2023-02-01'
 summary: 'PTS市場とセキュリティトークン市場向けのマルチテナント金融取引システムを設計・開発・運用'
-tags: ['Python', 'TypeScript', 'Next.js', 'AWS', 'PostgreSQL', 'Multi-tenant']
+tags: ['Python', 'TypeScript/Next.js', 'AWS', 'PostgreSQL', 'Multi-tenant']
 ---
 
 ## プロジェクト概要
 
-金融IT企業において、私設取引システム(PTS)およびセキュリティトークン市場向けの取引システムの立ち上げと運用をテックリーダーとして担当しました。証券会社・アセットマネジメント向けの外部向けWebシステムとバックオフィス業務用システムを開発し、マルチテナントアーキテクチャによる効率的な運用基盤を構築しました。
+金融企業において、私設取引システム(PTS)の開発・運用をテックリーダーとして担当しました。株式PTSでは既存システムの保守開発を行い、セキュリティトークンPTSでは立ち上げから携わりました。外部向けのWebシステムとバックオフィス業務用システムを開発し、マルチテナントアーキテクチャによるセキュアな運用基盤を構築しました。
 
 ## 担当業務
 
@@ -19,7 +19,7 @@ tags: ['Python', 'TypeScript', 'Next.js', 'AWS', 'PostgreSQL', 'Multi-tenant']
 
 ### 開発環境整備
 
-- DevContainerによる開発環境の統一化
+- DevContainerによる開発環境の整備
 - テスト基盤(pytest)の構築とテスト自動化
 - CI/CD (CodePipeline, CodeBuild) による自動デプロイパイプライン構築
 
@@ -34,32 +34,32 @@ tags: ['Python', 'TypeScript', 'Next.js', 'AWS', 'PostgreSQL', 'Multi-tenant']
 
 ### 言語・フレームワーク
 
-- **Python 3.9**: バックエンドAPI開発 (社内ライブラリ)
-- **TypeScript**: フロントエンド開発
-- **Next.js**: Webアプリケーションフレームワーク
-- **Node.js**: サーバーサイド処理
+- **Python 3.10**: バックエンドAPI及び社内ライブラリ開発
+- **Next.js**: バックオフィス用Webアプリ開発
+- **OpenAPI Specification**: API仕様定義及びAPI Gateway構築
 
 ### インフラ・クラウド
 
-- **AWS Lambda**: サーバーレス関数実行
-- **AWS CodePipeline**: CI/CDパイプライン
-- **AWS CodeBuild**: ビルド自動化
-- **AWS API Gateway**: APIエンドポイント管理
+- **AWS Lambda**: API及びバッチ処理（原則Lambda利用）
+- **AWS CodePipeline / CodeBuild**: ruffの確認やpytestの実行、及びデプロイの自動化
+- **AWS API Gateway**: APIエンドポイント管理、Authorizerとの連携
+- **AWS Cognito**: 外部向けシステムの認証認可
 - **AWS Dynamic Policy**: 動的アクセス制御
-- **Docker (devcontainer)**: 開発環境コンテナ化
-- **ハイブリッドクラウド構成** (AWS + オンプレミス)
+- **Docker**: 開発環境コンテナ化（DevContainer）、DBやAPIのSandbox機能提供
 
 ### データベース
 
-- **PostgreSQL**: RLS (Row Level Security) によるマルチテナントデータ分離
+- **PostgreSQL**: マルチテナントデータ分離（Row Level Security）
 
 ### 開発ツール
 
-- **Git** (CodeCommit, GitHub)
-- **pytest**: Python テストフレームワーク
+- **Git**: バージョン管理（CodeCommit, GitHub）、CI/CDとの連携
+- **pytest**: 単体テスト及び結合テストの実行
+- **Playwright**: リグレッションテストの実行
 - **ruff**: Python linter/formatter
-- **Claude Code (Bedrock)**: AI駆動開発
-- **GitHub Copilot**: コード補完
+- **Claude Code / GitHub Copilot**: AI駆動開発
+- **Asana / Jira**: チケット管理
+- **Backlog**: ナレッジ集約
 
 ## 技術的な取り組み
 
@@ -73,9 +73,8 @@ Claude Code (Bedrock) を中心としたAI開発環境を導入。カスタム�
 
 ### 3. 品質保証体制の確立
 
-- DevContainerによる開発環境の統一化で環境差異によるバグを削減
-- pytestを活用した自動テスト基盤の構築（単体テスト・結合テストの自動化）
-- CI/CDパイプラインによる継続的インテグレーション・デリバリー
+- DevContainerによる開発環境の整備で静的解析の恩恵を浸透させ開発体験の向上
+- pytestを活用したテスト基盤の構築（単体テストの自動化、結合テストのスクリプト化）
 - テストカバレッジの向上と品質の安定化を実現
 
 ## 役割
@@ -84,12 +83,12 @@ Claude Code (Bedrock) を中心としたAI開発環境を導入。カスタム�
 
 - 要件定義、設計、実装、テスト、運用の全工程を担当
 - 技術選定・開発規約策定・コードレビュー
-- チームマネジメント (最大9名)
+- チケット運用ルールの作成及び改善、ナレッジの整備及び運用ルール作成と改善
 
 ## 成果
 
 - 金融取引システムの安定稼働を実現
-- マルチテナントアーキテクチャによる効率的な運用基盤の構築
+- マルチテナントアーキテクチャによるセキュアな運用基盤の構築
 - AI駆動開発の導入による開発効率の向上
 - DevContainer・テスト自動化・CI/CDによる品質保証体制の確立
 
