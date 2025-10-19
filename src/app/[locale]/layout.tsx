@@ -10,6 +10,7 @@ import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { siteConfig, siteMetadata } from '@/lib/site'
+import { ParticleNetwork } from '@/features/ui/particleNetwork'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -90,6 +91,8 @@ export default async function RootLayout({
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white text-black dark:bg-black dark:text-white">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
           <NextIntlClientProvider locale={locale} messages={messages}>
+            {/* 背景パーティクル - 全ページ共通 */}
+            <ParticleNetwork particleCount={60} maxDistance={120} speed={0.2} />
             <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
               <Navbar />
               {children}

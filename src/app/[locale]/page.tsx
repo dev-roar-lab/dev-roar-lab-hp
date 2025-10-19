@@ -2,7 +2,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { HomePageContent } from '@/features/ui/homePageContent'
 import { TerminalWindow } from '@/features/ui/terminalWindow'
-import { ParticleNetwork } from '@/features/ui/particleNetwork'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -37,9 +36,6 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
   return (
     <HomePageContent>
-      {/* 背景パーティクル */}
-      <ParticleNetwork particleCount={60} maxDistance={120} speed={0.2} />
-
       {/* メインコンテンツ */}
       <section className="relative flex items-center justify-center min-h-[calc(100vh-200px)]">
         <TerminalWindow commands={commands} prompt={t('terminal.prompt')} />
