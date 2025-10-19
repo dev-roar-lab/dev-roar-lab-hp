@@ -23,12 +23,14 @@ import {
   SiAnthropic,
   SiSharp
 } from 'react-icons/si'
+import { ComponentType } from 'react'
 
 // Devicon imports for technologies not available in react-icons
 import { PlaywrightOriginal } from 'devicons-react'
 
 export interface TechInfo {
-  icon: IconType
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon: IconType | ComponentType<any>
   color: string
 }
 
