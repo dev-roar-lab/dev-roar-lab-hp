@@ -1,6 +1,8 @@
 'use client'
 
 import { Link, usePathname } from '@/i18n/routing'
+import { LanguageSwitcher } from './languageSwitcher'
+import { ThemeSwitcher } from './themeSwitcher'
 
 /**
  * Navigation item configuration
@@ -40,11 +42,8 @@ export function Navbar() {
   return (
     <aside className="-ml-[8px] mb-16 tracking-tight">
       <div className="lg:sticky lg:top-20">
-        <nav
-          className="flex flex-row items-start relative px-0 pb-0 fade md:overflow-auto scroll-pr-6 md:relative"
-          id="nav"
-        >
-          <div className="flex flex-row space-x-0 pr-10">
+        <nav className="flex flex-row items-center justify-between relative px-0 pb-0 fade scroll-pr-6" id="nav">
+          <div className="flex flex-row space-x-0 pr-10 overflow-x-auto">
             {Object.entries(navItems).map(([path, { name }]) => {
               const isActive = pathname === path || (path !== '/' && pathname.startsWith(path))
 
@@ -62,6 +61,10 @@ export function Navbar() {
                 </Link>
               )
             })}
+          </div>
+          <div className="flex items-center gap-2 relative">
+            <LanguageSwitcher />
+            <ThemeSwitcher />
           </div>
         </nav>
       </div>

@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Navbar } from '@/features/ui/nav'
 import Footer from '@/features/ui/footer'
+import { ThemeProvider } from '@/features/ui/themeProvider'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
@@ -85,18 +86,17 @@ export default async function RootLayout({
 
   const messages = await getMessages()
   return (
-    <html
-      lang={locale}
-      className={cx('text-black bg-white dark:text-white dark:bg-black', GeistSans.variable, GeistMono.variable)}
-    >
-      <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-            <Navbar />
-            {children}
-            <Footer />
-          </main>
-        </NextIntlClientProvider>
+    <html lang={locale} className={cx(GeistSans.variable, GeistMono.variable)} suppressHydrationWarning>
+      <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white text-black dark:bg-black dark:text-white">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+              <Navbar />
+              {children}
+              <Footer />
+            </main>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

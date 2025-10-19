@@ -1,16 +1,18 @@
 @import 'tailwindcss';
 
+@variant dark (&:where(.dark, .dark *));
+
 ::selection {
   background-color: #47a3f3;
   color: #fefefe;
 }
 
 :root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
+  --sh-class: #4c97f8;
+  --sh-identifier: white;
   --sh-sign: #8996a3;
-  --sh-string: #007f7a;
-  --sh-keyword: #e02518;
+  --sh-string: #0fa295;
+  --sh-keyword: #f47067;
   --sh-comment: #a19595;
   --sh-jsxliterals: #6266d1;
   --sh-property: #e25a1c;
@@ -27,6 +29,17 @@
   html {
     color-scheme: dark;
   }
+}
+
+.dark {
+  --sh-class: #4c97f8;
+  --sh-identifier: white;
+  --sh-keyword: #f47067;
+  --sh-string: #0fa295;
+}
+
+.dark html {
+  color-scheme: dark;
 }
 
 html {
@@ -61,7 +74,7 @@ html {
 }
 
 .prose pre {
-  @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900 py-2 px-3 text-sm;
+  @apply bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-800 py-2 px-3 text-sm;
 }
 
 .prose code {
