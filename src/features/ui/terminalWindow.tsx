@@ -201,7 +201,7 @@ export function TerminalWindow({ commands, prompt = 'user@dev-roar-lab:~$' }: Te
                   <CommandLine
                     command={currentCommand.command}
                     prompt={currentCommand.prompt || prompt}
-                    showCursor={!showOutput && isLastCommand}
+                    showCursor={!showOutput}
                     onComplete={handleCommandComplete}
                   />
                   {showOutput &&
@@ -217,6 +217,7 @@ export function TerminalWindow({ commands, prompt = 'user@dev-roar-lab:~$' }: Te
               {showOutput && !isLastCommand && (
                 <div className="font-mono text-sm">
                   <span className="text-green-500 dark:text-green-400">{prompt}</span>
+                  <Cursor />
                 </div>
               )}
 
