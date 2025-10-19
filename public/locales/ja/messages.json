@@ -17,7 +17,7 @@
     "commands": {
       "whoami": {
         "command": "whoami",
-        "output": "フルスタックエンジニア | クラウドアーキテクト"
+        "output": "Full-stack Developer | Cloud Architect"
       },
       "cat_skills": {
         "command": "cat core-skills.txt"
@@ -25,6 +25,10 @@
       "ls_links": {
         "command": "ls -la ~/links",
         "output": ["blog/", "projects/", "about/"]
+      },
+      "echo_welcome": {
+        "command": "echo \"Welcome Dev Roar Lab!!\"",
+        "output": "Welcome Dev Roar Lab!!"
       }
     }
   },

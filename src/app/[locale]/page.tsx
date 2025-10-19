@@ -21,16 +21,21 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
     {
       command: t('terminal.commands.whoami.command'),
       output: t('terminal.commands.whoami.output'),
-      delay: 3000 // 次のコマンドまで3秒待機
+      delay: 1000 // 次のコマンドまで1秒待機
     },
     {
       command: t('terminal.commands.cat_skills.command'),
       output: formatSkillsForTerminal(),
-      delay: 3000 // 次のコマンドまで3秒待機
+      delay: 2000 // 次のコマンドまで2秒待機
     },
     {
       command: t('terminal.commands.ls_links.command'),
-      output: t.raw('terminal.commands.ls_links.output') as string[]
+      output: t.raw('terminal.commands.ls_links.output') as string[],
+      delay: 2000 // 次のコマンドまで2秒待機
+    },
+    {
+      command: t('terminal.commands.echo_welcome.command'),
+      output: t('terminal.commands.echo_welcome.output')
       // 最後のコマンドなのでdelayは不要
     }
   ]

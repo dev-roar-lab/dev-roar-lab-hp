@@ -25,6 +25,10 @@
       "ls_links": {
         "command": "ls -la ~/links",
         "output": ["blog/", "projects/", "about/"]
+      },
+      "echo_welcome": {
+        "command": "echo \"Welcome Dev Roar Lab!!\"",
+        "output": "Welcome Dev Roar Lab!!"
       }
     }
   },
