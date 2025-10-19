@@ -2,7 +2,6 @@
 
 import { Link, usePathname } from '@/i18n/routing'
 import { LanguageSwitcher } from './languageSwitcher'
-import { ThemeSwitcher } from './themeSwitcher'
 
 /**
  * Navigation item configuration
@@ -64,7 +63,6 @@ export function Navbar() {
           </div>
           <div className="flex items-center gap-2 relative">
             <LanguageSwitcher />
-            <ThemeSwitcher />
           </div>
         </nav>
       </div>
