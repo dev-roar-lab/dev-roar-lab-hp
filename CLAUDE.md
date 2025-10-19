@@ -280,6 +280,51 @@ Husky + lint-staged automatically run on commit:
 - ESLint with `--fix` on `.{ts,tsx,js,jsx,cjs,mjs,md}` files
 - Prettier with `--write` on code and config files
 
+### Semantic Versioning
+
+This project follows [Semantic Versioning 2.0.0](https://semver.org/).
+
+**Version format**: `MAJOR.MINOR.PATCH` (e.g., `1.0.0`)
+
+| Version   | Description                                                      | Example                                 |
+| --------- | ---------------------------------------------------------------- | --------------------------------------- |
+| **MAJOR** | Incompatible breaking changes (API changes, major UI redesigns)  | `2.0.0`: Complete UI framework overhaul |
+| **MINOR** | Backward-compatible feature additions (new features, components) | `1.1.0`: Add new blog category feature  |
+| **PATCH** | Backward-compatible bug fixes (bug fixes, minor improvements)    | `1.0.1`: Fix date display bug           |
+
+**What triggers a version bump**:
+
+✅ **Changes affecting the HP itself**:
+
+- Adding/modifying/removing UI components
+- Adding/modifying/removing pages
+- Changes affecting build artifacts (`out/`, `docs-site/`)
+- User-visible feature additions/changes
+- Dependency updates (e.g., React major upgrades)
+
+❌ **Changes that do NOT require version bump**:
+
+- CI/CD script modifications (`.github/workflows/`)
+- Development environment configuration (`.vscode/`, `.husky/`)
+- Documentation-only updates (`README.md`, `CLAUDE.md`)
+- Test code changes/additions only
+- Linter or formatter configuration changes
+
+**Version update process**:
+
+1. Update `version` field in `package.json`
+2. Commit the changes with appropriate prefix (`feat`, `fix`, etc.)
+3. Tag the version: `git tag v1.0.0`
+4. Version is automatically reflected in all artifacts on deployment
+
+**Important notes for AI assistants**:
+
+- Always check if changes affect the HP itself before suggesting version updates
+- Infrastructure-only changes (CI/CD, CloudFormation) should NOT bump the version
+- When adding new features or components, suggest a MINOR version bump
+- When fixing bugs, suggest a PATCH version bump
+- Only suggest MAJOR version bumps for breaking changes
+
 ## Deployment
 
 The site is deployed to AWS S3 + CloudFront using CloudFormation. See `cloudformation/README.md` for detailed deployment instructions.

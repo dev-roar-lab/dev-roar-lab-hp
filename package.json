@@ -1,6 +1,6 @@
 {
   "name": "dev-roar-lab-hp",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "TURBOPACK_CACHE_DISABLED=1 next dev --turbopack",
@@ -19,7 +19,8 @@
     "docs:storybook": "storybook build -o docs-site/storybook",
     "docs:typedoc": "typedoc",
     "docs:portal": "cp -r docs-site/public/* docs-site/",
-    "docs:build": "npm-run-all --parallel docs:storybook docs:typedoc && npm run docs:portal",
+    "docs:inject-version": "node scripts/inject-version.mjs",
+    "docs:build": "npm-run-all --parallel docs:storybook docs:typedoc && npm run docs:portal && npm run docs:inject-version",
     "docs:clean": "rm -rf docs-site/storybook docs-site/api docs-site/index.html docs-site/assets",
     "prepare": "husky install",
     "lint-staged": "lint-staged"

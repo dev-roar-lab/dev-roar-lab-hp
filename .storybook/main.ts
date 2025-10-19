@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite'
+import packageJson from '../package.json'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -7,6 +8,9 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs-vite',
     options: {}
   },
-  staticDirs: ['../public']
+  staticDirs: ['../public'],
+  docs: {
+    defaultName: `Documentation (Version ${packageJson.version})`
+  }
 }
 export default config

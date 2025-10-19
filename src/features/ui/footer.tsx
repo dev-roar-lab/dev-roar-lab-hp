@@ -78,6 +78,7 @@ function DocsIcon() {
  */
 export default function Footer() {
   const locale = useLocale()
+  const version = process.env.NEXT_PUBLIC_APP_VERSION || '0.0.0'
 
   const socialLinks = [
     {
@@ -120,6 +121,7 @@ export default function Footer() {
       <div className="mt-8 flex flex-col gap-2 text-sm text-neutral-600 dark:text-neutral-300">
         <p>Built with Next.js + TypeScript · Hosted on AWS</p>
         <p>© {new Date().getFullYear()} MIT Licensed</p>
+        <p>Version {version}</p>
       </div>
     </footer>
   )
