@@ -34,7 +34,8 @@
       "Write(/**/*.json)",
       "Write(/**/*.md)",
       "Write(/**/*.mdx)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(rm playwright-screenshots/*.png)"
     ],
     "deny": [],
     "ask": []
