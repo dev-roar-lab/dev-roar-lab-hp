@@ -24,6 +24,9 @@ import {
   SiSharp
 } from 'react-icons/si'
 
+// Devicon imports for technologies not available in react-icons
+import { PlaywrightOriginal } from 'devicons-react'
+
 export interface TechInfo {
   icon: IconType
   color: string
@@ -64,6 +67,7 @@ export const techIconMap: Record<string, TechInfo> = {
   'GitHub Actions': { icon: SiGithubactions, color: '#2088FF' },
   Git: { icon: SiGit, color: '#F05032' },
   Cloudflare: { icon: SiCloudflare, color: '#F38020' },
+  Playwright: { icon: PlaywrightOriginal, color: '#2EAD33' },
 
   // AI & Development Tools
   'Claude Code': { icon: SiClaude, color: '#CC9B7A' },
