@@ -18,7 +18,8 @@ const eslintConfig = [
       'node_modules/**',
       'build/**',
       'next-env.d.ts',
-      'storybook-static/**'
+      'storybook-static/**',
+      'docs-site/**'
     ]
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
