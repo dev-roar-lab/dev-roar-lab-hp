@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: 'Dev Roar Lab',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://dev-roar-lab.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dev-roar-lab.com',
   author: {
     name: 'dev-roar-researcher',
     github: 'https://github.com/dev-roar-researcher',
