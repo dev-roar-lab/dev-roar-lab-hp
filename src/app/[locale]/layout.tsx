@@ -11,6 +11,7 @@ import { routing } from '@/i18n/routing'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { siteConfig, siteMetadata } from '@/lib/site'
 import { ParticleNetwork } from '@/features/ui/particleNetwork'
+import { WebVitals } from '@/features/ui/webVitals'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -89,6 +90,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={cx(GeistSans.variable, GeistMono.variable)} suppressHydrationWarning>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white text-black dark:bg-black dark:text-white">
+        <WebVitals />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
           <NextIntlClientProvider locale={locale} messages={messages}>
             {/* 背景パーティクル - 全ページ共通 */}
