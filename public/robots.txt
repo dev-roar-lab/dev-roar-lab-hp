@@ -1,6 +1,12 @@
-# https://www.robotstxt.org/robotstxt.html
+# robots.txt for Dev Roar Lab HP
+# https://www.dev-roar-lab.com/
+
+# Allow all web crawlers to access all content
 User-agent: *
 Allow: /
 
-# Sitemaps
+# Sitemap location
 Sitemap: https://www.dev-roar-lab.com/sitemap.xml
+
+# Crawl-delay (optional, adjust if needed)
+# Crawl-delay: 1
