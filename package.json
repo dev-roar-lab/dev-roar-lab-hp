@@ -15,6 +15,10 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:a11y": "playwright test tests/accessibility-*.spec.ts",
     "ci": "npm-run-all --serial verify-format lint build",
     "optimize-images": "node scripts/optimize-images.mjs",
     "storybook": "storybook dev -p 6006",
@@ -40,9 +44,11 @@
     "web-vitals": "5.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.0",
     "@chromatic-com/storybook": "4.1.1",
     "@eslint/eslintrc": "3.3.1",
     "@next/bundle-analyzer": "16.0.0",
+    "@playwright/test": "1.56.1",
     "@storybook/addon-docs": "9.1.13",
     "@storybook/addon-onboarding": "9.1.13",
     "@storybook/nextjs-vite": "9.1.13",

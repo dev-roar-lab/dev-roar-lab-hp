@@ -109,16 +109,21 @@
 - MDXファイル読み込み → パース → レンダリング
 - i18n設定 → 翻訳取得 → 表示
 
-### 4. E2Eテスト（将来的に）
+### 4. E2Eテスト（Playwright）
 
-**対象**: ユーザーシナリオ全体
+**対象**: ユーザーシナリオ全体、アクセシビリティ
 
-**ツール**: Playwright（将来導入検討）
+**ツール**: Playwright + @axe-core/playwright
 
 **例**:
 
 - ブログ記事一覧 → 詳細ページ遷移
 - 言語切り替え
+- **アクセシビリティテスト（WCAG 2.1 AA準拠）**
+  - 全ページのaxe-coreスキャン
+  - キーボードナビゲーション
+  - フォーカス表示
+  - セマンティックHTML構造
 
 ---
 
@@ -548,6 +553,8 @@ const content = createMDXContent({ title: 'テスト', publishedAt: '2025-01-01'
 
 ## テスト実行コマンド
 
+### ユニットテスト（Vitest）
+
 ```bash
 # すべてのテストを実行
 npm test
@@ -568,17 +575,134 @@ npm test -- --ui
 npm test -- --changed
 ```
 
+### E2E & アクセシビリティテスト（Playwright）
+
+```bash
+# アクセシビリティテストを実行
+npm run test:a11y
+
+# 全E2Eテストを実行
+npm run test:e2e
+
+# ヘッドありモードで実行（デバッグ用）
+npm run test:e2e:headed
+
+# Playwright UIモードで実行
+npm run test:e2e:ui
+
+# 特定のブラウザのみ実行
+npm run test:e2e -- --project=chromium
+```
+
+---
+
+## アクセシビリティテスト（Playwright + axe-core）
+
+### テスト対象ページ
+
+すべての主要ページでWCAG 2.1 Level AA準拠をテスト:
+
+- ホームページ（日本語・英語）
+- ブログ一覧ページ（日本語・英語）
+- ブログ記事詳細ページ（日本語・英語）
+- プロジェクト一覧ページ（日本語・英語）
+- Aboutページ（日本語・英語）
+
+### テスト項目
+
+1. **自動アクセシビリティチェック**
+
+   - axe-coreによるWCAG 2.1 AA違反の検出
+   - カラーコントラスト比
+   - ARIA属性の正しい使用
+   - フォーム要素のラベル
+
+2. **ドキュメント構造**
+
+   - 適切な見出し階層
+   - lang属性の設定
+   - ページタイトルの存在
+
+3. **キーボードナビゲーション**
+
+   - すべてのインタラクティブ要素がキーボードで操作可能
+   - フォーカス表示の確認
+   - 論理的なTab順序
+
+4. **画像とメディア**
+
+   - 画像のalt属性
+   - 装飾的画像の適切なマークアップ
+
+5. **セマンティックHTML**
+   - article、section、navなどの適切な使用
+   - ランドマーク要素
+
+### 既知の問題（2025-10-25時点）
+
+以下のアクセシビリティ問題が検出されています：
+
+1. **SVGアイコンのアクセシビリティ**
+   - **問題**: SVG要素に`aria-label`、`title`、または`role="img"`が不足
+   - **影響ページ**: About、Blog、Projects
+   - **優先度**: 高
+   - **対応予定**: v1.7.0
+
+### テスト実行方法
+
+```bash
+# アクセシビリティテストのみ実行
+npm run test:a11y
+
+# Chromiumのみで実行（高速）
+npm run test:a11y -- --project=chromium
+
+# ヘッドありモードでデバッグ
+npm run test:e2e:headed tests/accessibility-homepage.spec.ts
+```
+
+### テストの追加方法
+
+新しいページを追加した際は、対応するアクセシビリティテストも追加:
+
+```typescript
+// tests/accessibility-newpage.spec.ts
+import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
+
+test.describe('New Page Accessibility (Japanese)', () => {
+  test('should not have any automatically detectable accessibility issues', async ({ page }) => {
+    await page.goto('/ja/newpage')
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
+})
+```
+
 ---
 
 ## 参考リソース
+
+### ユニットテスト
 
 - [Vitest公式ドキュメント](https://vitest.dev/)
 - [Testing Library](https://testing-library.com/)
 - [Storybook Test Addon](https://storybook.js.org/docs/writing-tests)
 - [Effective Snapshot Testing](https://kentcdodds.com/blog/effective-snapshot-testing)
 
+### E2E & アクセシビリティテスト
+
+- [Playwright公式ドキュメント](https://playwright.dev/)
+- [axe-core Playwright Integration](https://github.com/dequelabs/axe-core-npm/tree/develop/packages/playwright)
+- [WCAG 2.1ガイドライン](https://www.w3.org/WAI/WCAG21/quickref/)
+- [WebAIMアクセシビリティチェックリスト](https://webaim.org/standards/wcag/checklist)
+
 ---
 
 **策定日**: 2025年10月17日
-**最終更新**: 2025年10月17日
-**次回レビュー**: 2025年11月17日（1ヶ月後）
+**最終更新**: 2025年10月25日
+**次回レビュー**: 2025年11月25日（1ヶ月後）

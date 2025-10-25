@@ -46,7 +46,7 @@ export function TechBadge({ tech, size = 'md' }: TechBadgeProps) {
     >
       {techInfo ? (
         <>
-          <techInfo.icon className={iconSizes[size]} style={{ color: techInfo.color }} />
+          <techInfo.icon className={iconSizes[size]} style={{ color: techInfo.color }} aria-hidden="true" />
           <span>{tech}</span>
         </>
       ) : (

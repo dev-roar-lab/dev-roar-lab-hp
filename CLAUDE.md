@@ -89,9 +89,16 @@ npm run ci               # Run full CI pipeline (format → lint → build)
 ### Testing
 
 ```bash
+# Unit Tests (Vitest)
 npm test                 # Run Vitest unit tests
 npm run test:ui          # Run tests in UI mode
 npm run test:coverage    # Run tests with coverage report
+
+# E2E & Accessibility Tests (Playwright)
+npm run test:e2e         # Run all E2E tests
+npm run test:e2e:headed  # Run E2E tests with browser visible (debugging)
+npm run test:e2e:ui      # Run E2E tests in Playwright UI mode
+npm run test:a11y        # Run accessibility tests only (WCAG 2.1 AA)
 ```
 
 ### Storybook
@@ -190,6 +197,11 @@ src/
 ├── lib/                  # Shared libraries
 │   └── site.ts          # Site configuration
 └── middleware.ts         # next-intl middleware for locale handling
+tests/                    # E2E and accessibility tests (Playwright)
+├── accessibility-homepage.spec.ts
+├── accessibility-blog.spec.ts
+├── accessibility-projects.spec.ts
+└── accessibility-about.spec.ts
 ```
 
 ### MDX Blog System
@@ -450,7 +462,8 @@ npm run test:coverage # Generate coverage report
 ### Development & Testing
 
 - **Vitest 3.1.2** for unit testing
-- **Playwright 1.52.0** for browser testing
+- **Playwright 1.56.1** for E2E testing
+- **@axe-core/playwright 4.11.0** for accessibility testing (WCAG 2.1 AA compliance)
 - **Storybook 8.6.12** for component development
 - **ESLint 9.37.0** + **Prettier 3.5.3** for code quality
 - **Husky 9.1.7** + **lint-staged 15.5.1** for pre-commit hooks
