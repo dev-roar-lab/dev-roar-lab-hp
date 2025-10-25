@@ -13,6 +13,7 @@ import { siteConfig, siteMetadata } from '@/lib/site'
 import { ParticleNetwork } from '@/features/ui/particleNetwork'
 import { WebVitals } from '@/features/ui/webVitals'
 import { GoogleAnalytics } from '@/features/ui/googleAnalytics'
+import { createWebSiteJsonLd, renderJsonLd } from '@/lib/jsonLd'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -88,8 +89,19 @@ export default async function RootLayout({
   setRequestLocale(locale)
 
   const messages = await getMessages()
+
+  // Generate WebSite JSON-LD for the site
+  const websiteJsonLd = createWebSiteJsonLd(locale)
+
   return (
     <html lang={locale} className={cx(GeistSans.variable, GeistMono.variable)} suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: renderJsonLd(websiteJsonLd) }}
+        />
+      </head>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white text-black dark:bg-black dark:text-white">
         <GoogleAnalytics />
         <WebVitals />

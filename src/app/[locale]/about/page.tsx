@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { SkillBadges } from '@/features/ui/skillBadge'
+import { createPersonJsonLd, renderJsonLd } from '@/lib/jsonLd'
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -18,8 +19,22 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   setRequestLocale(locale)
 
   const t = await getTranslations('about')
+
+  // Generate Person JSON-LD for the author/about page
+  const personJsonLd = createPersonJsonLd()
+
   return (
     <section>
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: renderJsonLd({
+            '@context': 'https://schema.org',
+            ...personJsonLd
+          })
+        }}
+      />
       <h1 className="mb-8 text-2xl font-semibold tracking-tighter">{t('title')}</h1>
 
       <div className="prose prose-neutral dark:prose-invert">

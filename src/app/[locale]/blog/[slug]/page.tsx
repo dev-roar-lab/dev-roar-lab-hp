@@ -6,6 +6,7 @@ import { setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { siteConfig } from '@/lib/site'
 import { TechBadges } from '@/features/ui/techBadge'
+import { createBlogPostingJsonLd, createBreadcrumbListJsonLd, renderJsonLd } from '@/lib/jsonLd'
 
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) => {
@@ -66,56 +67,52 @@ export default async function Blog({ params }: { params: Promise<{ locale: strin
     notFound()
   }
 
+  // Parse tags for JSON-LD and display
+  const rawTags = (post.metadata as { tags?: string[] | string }).tags
+  let tags: string[] | undefined
+  if (typeof rawTags === 'string') {
+    // YAML配列の文字列表現をパース: "['item1', 'item2']" -> ['item1', 'item2']
+    try {
+      tags = JSON.parse(rawTags.replace(/'/g, '"'))
+    } catch {
+      tags = undefined
+    }
+  } else {
+    tags = rawTags
+  }
+
+  // Generate BlogPosting JSON-LD
+  const blogPostingJsonLd = createBlogPostingJsonLd({
+    title: post.metadata.title,
+    description: post.metadata.summary,
+    publishedAt: post.metadata.publishedAt,
+    slug: post.slug,
+    locale,
+    tags
+  })
+
+  // Generate BreadcrumbList JSON-LD
+  const breadcrumbJsonLd = createBreadcrumbListJsonLd(
+    [{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog' }, { name: post.metadata.title }],
+    locale
+  )
+
   return (
     <section>
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BlogPosting',
-            headline: post.metadata.title,
-            datePublished: post.metadata.publishedAt,
-            dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `${siteConfig.url}${post.metadata.image}`
-              : `${siteConfig.url}/og?title=${encodeURIComponent(post.metadata.title)}`,
-            url: `${siteConfig.url}/${locale}/blog/${post.slug}`,
-            inLanguage: locale,
-            author: {
-              '@type': 'Person',
-              name: siteConfig.author.name,
-              url: siteConfig.author.github
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: siteConfig.name,
-              url: siteConfig.url
-            }
-          })
-        }}
+        dangerouslySetInnerHTML={{ __html: renderJsonLd(blogPostingJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: renderJsonLd(breadcrumbJsonLd) }}
       />
       <h1 className="title font-semibold text-2xl tracking-tighter">{post.metadata.title}</h1>
       <div className="flex flex-col gap-4 mt-2 mb-8">
         <p className="text-sm text-neutral-600 dark:text-neutral-400">{formatDate(post.metadata.publishedAt)}</p>
-        {(() => {
-          const rawTags = (post.metadata as { tags?: string[] | string }).tags
-          // タグが文字列の場合は配列に変換
-          let tags: string[] | undefined
-          if (typeof rawTags === 'string') {
-            // YAML配列の文字列表現をパース: "['item1', 'item2']" -> ['item1', 'item2']
-            try {
-              tags = JSON.parse(rawTags.replace(/'/g, '"'))
-            } catch {
-              tags = undefined
-            }
-          } else {
-            tags = rawTags
-          }
-          return tags && tags.length > 0 && <TechBadges techs={tags} size="sm" />
-        })()}
+        {tags && tags.length > 0 && <TechBadges techs={tags} size="sm" />}
       </div>
       <article className="prose">
         <CustomMDX source={post.content} />
