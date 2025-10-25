@@ -3,6 +3,13 @@
 import { useEffect } from 'react'
 import { onCLS, onFCP, onINP, onLCP, onTTFB } from 'web-vitals'
 
+// Extend Window interface for gtag
+declare global {
+  interface Window {
+    gtag?: (command: string, eventName: string, params: Record<string, unknown>) => void
+  }
+}
+
 /**
  * Web Vitals measurement component
  *
@@ -31,17 +38,16 @@ export function WebVitals() {
         })
       }
 
-      // In production, send to your analytics service
-      // Example: Google Analytics 4
-      // if (window.gtag) {
-      //   window.gtag('event', metric.name, {
-      //     value: Math.round(metric.value),
-      //     metric_id: metric.id,
-      //     metric_value: metric.value,
-      //     metric_delta: metric.delta,
-      //     metric_rating: metric.rating,
-      //   });
-      // }
+      // In production, send to Google Analytics 4
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', metric.name, {
+          value: Math.round(metric.value),
+          metric_id: metric.id,
+          metric_value: metric.value,
+          metric_delta: metric.delta,
+          metric_rating: metric.rating
+        })
+      }
 
       // Example: Vercel Analytics
       // if (window.va) {
