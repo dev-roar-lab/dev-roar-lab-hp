@@ -280,6 +280,48 @@ Husky + lint-staged automatically run on commit:
 - ESLint with `--fix` on `.{ts,tsx,js,jsx,cjs,mjs,md}` files
 - Prettier with `--write` on code and config files
 
+### Git Command Execution
+
+**IMPORTANT**: Execute git commands **one at a time**, not chained with `&&`.
+
+Due to permission requirements, chaining git commands can require user approval for each command in the chain, which disrupts the workflow.
+
+❌ **Don't do this:**
+
+```bash
+git add . && git commit -m "message" && git push
+```
+
+✅ **Do this instead:**
+
+```bash
+# Step 1: Add files
+git add .
+
+# Step 2: Commit (after step 1 completes)
+git commit -m "message"
+
+# Step 3: Push (after step 2 completes)
+git push
+```
+
+**Why this matters:**
+
+- Each git command may require separate user approval
+- Chained commands block on the first approval request
+- Sequential execution provides better visibility of each operation's result
+- Easier to handle errors at each step
+
+**Exception**: Commands that are part of a single logical operation can be chained:
+
+```bash
+# OK: Single commit operation with heredoc
+git commit -m "$(cat <<'EOF'
+Multi-line commit message
+EOF
+)"
+```
+
 ### Semantic Versioning
 
 This project follows [Semantic Versioning 2.0.0](https://semver.org/).
