@@ -25,8 +25,8 @@ import {
 } from 'react-icons/si'
 import { ComponentType } from 'react'
 
-// Devicon imports for technologies not available in react-icons
-import { PlaywrightOriginal } from 'devicons-react'
+// Custom icons for technologies not available in react-icons
+import { PlaywrightIcon } from './customIcons'
 
 export interface TechInfo {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,7 +69,7 @@ export const techIconMap: Record<string, TechInfo> = {
   'GitHub Actions': { icon: SiGithubactions, color: '#2088FF' },
   Git: { icon: SiGit, color: '#F05032' },
   Cloudflare: { icon: SiCloudflare, color: '#F38020' },
-  Playwright: { icon: PlaywrightOriginal, color: '#2EAD33' },
+  Playwright: { icon: PlaywrightIcon, color: '#2EAD33' },
 
   // AI & Development Tools
   'Claude Code': { icon: SiClaude, color: '#CC9B7A' },

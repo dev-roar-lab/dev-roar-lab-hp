@@ -1,6 +1,6 @@
 {
   "name": "dev-roar-lab-hp",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "scripts": {
     "dev": "TURBOPACK_CACHE_DISABLED=1 next dev --turbopack",
@@ -8,6 +8,7 @@
     "prebuild": "npm run optimize-images",
     "build": "next build && npm run postbuild",
     "postbuild": "cp out/ja/index.html out/index.html",
+    "analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "eslint .",
     "verify-format": "prettier src/ -c",
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "4.1.1",
     "@eslint/eslintrc": "3.3.1",
+    "@next/bundle-analyzer": "16.0.0",
     "@storybook/addon-docs": "9.1.13",
     "@storybook/addon-onboarding": "9.1.13",
     "@storybook/nextjs-vite": "9.1.13",
@@ -51,7 +53,6 @@
     "@types/react-dom": "19.1.2",
     "@vitest/browser": "3.1.2",
     "@vitest/coverage-v8": "3.1.2",
-    "devicons-react": "1.5.0",
     "eslint": "9.37.0",
     "eslint-config-next": "15.3.1",
     "eslint-config-prettier": "10.1.2",

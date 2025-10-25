@@ -101,6 +101,20 @@ npm run storybook        # Start Storybook dev server on port 6006
 npm run build-storybook  # Build Storybook for production
 ```
 
+### Bundle Analysis
+
+```bash
+npm run analyze          # Build with bundle analyzer (generates reports in .next/analyze/)
+```
+
+After running `npm run analyze`, the following reports are generated:
+
+- `.next/analyze/client.html` - Client-side bundle analysis
+- `.next/analyze/nodejs.html` - Node.js bundle analysis
+- `.next/analyze/edge.html` - Edge runtime bundle analysis
+
+Open these HTML files in a browser to visualize bundle composition and identify optimization opportunities.
+
 ### Deployment (AWS S3 + CloudFront)
 
 ```bash

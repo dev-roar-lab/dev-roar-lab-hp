@@ -1,8 +1,12 @@
 import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
+import withBundleAnalyzer from '@next/bundle-analyzer'
 import packageJson from './package.json'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true'
+})
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -21,4 +25,4 @@ const nextConfig: NextConfig = {
   }
 }
 
-export default withNextIntl(nextConfig)
+export default bundleAnalyzer(withNextIntl(nextConfig))
