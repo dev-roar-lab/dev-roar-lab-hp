@@ -1,0 +1,212 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Apex domain redirect to www subdomain using S3 website hosting and CloudFront'
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: Project name for resource naming
+    Default: dev-roar-lab-hp
+
+  ApexDomain:
+    Type: String
+    Description: Apex domain to redirect from (e.g., example.com)
+    Default: dev-roar-lab.com
+
+  TargetDomain:
+    Type: String
+    Description: Target domain to redirect to (e.g., www.example.com)
+    Default: www.dev-roar-lab.com
+
+  ACMCertificateArn:
+    Type: String
+    Description: ARN of ACM certificate in us-east-1 region (must cover apex domain)
+
+Conditions:
+  HasACMCertificate: !Not [!Equals [!Ref ACMCertificateArn, '']]
+
+Resources:
+  # S3 Bucket for redirect (website hosting enabled)
+  RedirectBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${ProjectName}-apex-redirect-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        RedirectAllRequestsTo:
+          HostName: !Ref TargetDomain
+          Protocol: https
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+  # Bucket Policy to allow public read access (required for website hosting)
+  RedirectBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref RedirectBucket
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${RedirectBucket.Arn}/*'
+
+  # Custom Response Headers Policy for Security
+  SecurityHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub '${ProjectName}-ApexRedirect-SecurityHeaders'
+        Comment: 'Security headers for apex domain redirect'
+        SecurityHeadersConfig:
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 63072000 # 2 years
+            IncludeSubdomains: true
+            Preload: true
+            Override: true
+          ContentTypeOptions:
+            Override: true
+          FrameOptions:
+            FrameOption: DENY
+            Override: true
+          ReferrerPolicy:
+            ReferrerPolicy: strict-origin-when-cross-origin
+            Override: true
+          XSSProtection:
+            ModeBlock: true
+            Protection: true
+            Override: true
+        CustomHeadersConfig:
+          Items:
+            - Header: Permissions-Policy
+              Value: 'geolocation=(), microphone=(), camera=()'
+              Override: true
+
+  # CloudFront Distribution for apex domain redirect
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub 'CloudFront distribution for ${ApexDomain} redirect'
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: PriceClass_All
+
+        Aliases:
+          - !Ref ApexDomain
+
+        ViewerCertificate: !If
+          - HasACMCertificate
+          - AcmCertificateArn: !Ref ACMCertificateArn
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1.2_2021
+          - CloudFrontDefaultCertificate: true
+
+        Origins:
+          - Id: S3RedirectOrigin
+            # Use S3 website endpoint as custom origin (not S3 REST endpoint)
+            DomainName: !Sub '${RedirectBucket}.s3-website-${AWS::Region}.amazonaws.com'
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
+              OriginSSLProtocols:
+                - TLSv1.2
+
+        DefaultCacheBehavior:
+          TargetOriginId: S3RedirectOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # CachingOptimized
+          ResponseHeadersPolicyId: !Ref SecurityHeadersPolicy
+
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 300
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 300
+
+        Logging:
+          Bucket: !GetAtt LogBucket.DomainName
+          Prefix: cloudfront-apex-redirect/
+          IncludeCookies: false
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+  # S3 Bucket for CloudFront logs
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${ProjectName}-apex-redirect-logs-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldLogs
+            Status: Enabled
+            ExpirationInDays: 90
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+Outputs:
+  RedirectBucketName:
+    Description: Name of the redirect S3 bucket
+    Value: !Ref RedirectBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-RedirectBucketName'
+
+  RedirectBucketWebsiteURL:
+    Description: S3 website endpoint URL
+    Value: !GetAtt RedirectBucket.WebsiteURL
+    Export:
+      Name: !Sub '${AWS::StackName}-WebsiteURL'
+
+  CloudFrontDistributionId:
+    Description: CloudFront Distribution ID
+    Value: !Ref CloudFrontDistribution
+    Export:
+      Name: !Sub '${AWS::StackName}-DistributionId'
+
+  CloudFrontDomainName:
+    Description: CloudFront Distribution Domain Name
+    Value: !GetAtt CloudFrontDistribution.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-DomainName'
+
+  CloudFrontHostedZoneId:
+    Description: CloudFront Hosted Zone ID (for Route53 Alias record)
+    Value: Z2FDTNDATAQYW2
+
+  ApexDomainURL:
+    Description: Apex domain URL (configure Route53 A record to point here)
+    Value: !Sub 'https://${ApexDomain}'
+
+  LogBucketName:
+    Description: Name of the log bucket
+    Value: !Ref LogBucket

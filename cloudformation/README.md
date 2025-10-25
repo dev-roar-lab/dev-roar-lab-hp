@@ -4,10 +4,11 @@
 
 ## テンプレート一覧
 
-| ファイル名                   | 説明                                       | スタック名（推奨）          |
-| ---------------------------- | ------------------------------------------ | --------------------------- |
-| `s3-cloudfront-hosting.yaml` | S3バケット、CloudFront、ログバケットを作成 | `dev-roar-lab-hp`           |
-| `cicd-role.yaml`             | GitHub Actions用のIAMロールを作成          | `dev-roar-lab-hp-cicd-role` |
+| ファイル名                   | 説明                                                       | スタック名（推奨）              |
+| ---------------------------- | ---------------------------------------------------------- | ------------------------------- |
+| `s3-cloudfront-hosting.yaml` | S3バケット、CloudFront、ログバケットを作成                 | `dev-roar-lab-hp`               |
+| `apex-redirect.yaml`         | Apex domainからwww subdomainへのリダイレクト用インフラ作成 | `dev-roar-lab-hp-apex-redirect` |
+| `cicd-role.yaml`             | GitHub Actions用のIAMロールを作成                          | `dev-roar-lab-hp-cicd-role`     |
 
 ## 前提条件
 
@@ -50,6 +51,100 @@ aws cloudformation create-stack \
 - **エイリアス**: はい
 - **エイリアスターゲット**: CloudFrontディストリビューションのドメイン名（Outputsから取得）
 - **ホストゾーンID**: Z2FDTNDATAQYW2（CloudFrontの固定値）
+
+### ステップ1.5: Apex Domainリダイレクトのデプロイ（オプション）
+
+Apex domain（例：`example.com`）からwww subdomain（例：`www.example.com`）へのリダイレクトを設定する場合、以下の手順でリダイレクト専用のインフラを構築します。
+
+**前提条件:**
+
+- ステップ1でwww subdomainのホスティング環境が構築済みであること
+- ACM証明書がApex domainもカバーしていること（ワイルドカード証明書 `*.example.com` + `example.com` を推奨）
+
+**アーキテクチャ:**
+
+このテンプレートは、AWS公式のベストプラクティスに従い、以下のリソースを作成します：
+
+- **S3バケット**: リダイレクト専用（S3 website hosting機能を使用）
+- **CloudFront**: Apex domain用の新しいディストリビューション
+- **ログバケット**: CloudFrontアクセスログ保存用（90日で自動削除）
+
+#### デプロイコマンド
+
+```bash
+aws cloudformation create-stack \
+  --stack-name dev-roar-lab-hp-apex-redirect \
+  --template-body file://cloudformation/apex-redirect.yaml \
+  --parameters \
+    ParameterKey=ProjectName,ParameterValue=dev-roar-lab-hp \
+    ParameterKey=ApexDomain,ParameterValue=example.com \
+    ParameterKey=TargetDomain,ParameterValue=www.example.com \
+    ParameterKey=ACMCertificateArn,ParameterValue=arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERTIFICATE_ID
+```
+
+#### Route53 DNSレコードの作成
+
+スタックのデプロイが完了したら、Route53でApex domainのAliasレコードを作成します：
+
+```bash
+# CloudFrontドメイン名を取得
+APEX_CF_DOMAIN=$(aws cloudformation describe-stacks \
+  --stack-name dev-roar-lab-hp-apex-redirect \
+  --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDomainName`].OutputValue' \
+  --output text)
+
+echo "Route53で以下のAliasレコードを作成してください："
+echo "  名前: example.com"
+echo "  タイプ: A"
+echo "  エイリアス: はい"
+echo "  エイリアスターゲット: $APEX_CF_DOMAIN"
+echo "  ホストゾーンID: Z2FDTNDATAQYW2"
+```
+
+**または、AWS CLIで自動作成:**
+
+```bash
+# ホストゾーンIDを取得
+HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name \
+  --dns-name example.com \
+  --query 'HostedZones[0].Id' \
+  --output text | cut -d'/' -f3)
+
+# Aliasレコードを作成
+aws route53 change-resource-record-sets \
+  --hosted-zone-id $HOSTED_ZONE_ID \
+  --change-batch '{
+    "Changes": [{
+      "Action": "CREATE",
+      "ResourceRecordSet": {
+        "Name": "example.com",
+        "Type": "A",
+        "AliasTarget": {
+          "HostedZoneId": "Z2FDTNDATAQYW2",
+          "DNSName": "'"$APEX_CF_DOMAIN"'",
+          "EvaluateTargetHealth": false
+        }
+      }
+    }]
+  }'
+```
+
+#### テスト
+
+```bash
+# リダイレクトが正しく動作するか確認
+curl -I https://example.com
+
+# 期待される出力:
+# HTTP/2 301
+# location: https://www.example.com/
+```
+
+**重要な注意事項:**
+
+- このテンプレートは**リダイレクト専用**です。コンテンツをアップロードする必要はありません
+- S3 website hosting機能により、すべてのリクエストが自動的にターゲットドメインにリダイレクトされます
+- 追加コスト：CloudFrontディストリビューションの固定費（約$0.60/月）のみ
 
 ### ステップ2: GitHub Actions用IAMロールのデプロイ
 
@@ -187,6 +282,8 @@ aws cloudformation update-stack \
 
 ## スタックの削除
 
+### メインホスティング環境の削除
+
 ```bash
 # S3バケットを空にする
 BUCKET_NAME=$(aws cloudformation describe-stacks \
@@ -208,6 +305,31 @@ aws s3 rm s3://$LOG_BUCKET_NAME/ --recursive
 aws cloudformation delete-stack --stack-name dev-roar-lab-hp
 ```
 
+### Apex Domainリダイレクト環境の削除
+
+```bash
+# リダイレクトバケットを空にする（通常は空だが念のため）
+REDIRECT_BUCKET_NAME=$(aws cloudformation describe-stacks \
+  --stack-name dev-roar-lab-hp-apex-redirect \
+  --query 'Stacks[0].Outputs[?OutputKey==`RedirectBucketName`].OutputValue' \
+  --output text)
+
+aws s3 rm s3://$REDIRECT_BUCKET_NAME/ --recursive
+
+# ログバケットも空にする
+REDIRECT_LOG_BUCKET_NAME=$(aws cloudformation describe-stacks \
+  --stack-name dev-roar-lab-hp-apex-redirect \
+  --query 'Stacks[0].Outputs[?OutputKey==`LogBucketName`].OutputValue' \
+  --output text)
+
+aws s3 rm s3://$REDIRECT_LOG_BUCKET_NAME/ --recursive
+
+# スタックを削除
+aws cloudformation delete-stack --stack-name dev-roar-lab-hp-apex-redirect
+```
+
+**注意**: スタック削除前に、Route53のDNSレコード（Apex domainのAレコード）を手動で削除してください。
+
 ## リソース構成
 
 ### `s3-cloudfront-hosting.yaml` で作成されるリソース
@@ -218,6 +340,21 @@ aws cloudformation delete-stack --stack-name dev-roar-lab-hp
 4. **Origin Access Control (OAC)** - S3バケットへの安全なアクセス
 
 **注意**: Route53のDNSレコードは含まれていません。共通のDNS管理で設定してください。
+
+### `apex-redirect.yaml` で作成されるリソース
+
+1. **S3バケット（Redirect）** - リダイレクト専用バケット（S3 website hosting有効化）
+2. **S3バケット（Logs）** - CloudFrontのアクセスログを保存（90日で自動削除）
+3. **CloudFront Distribution** - Apex domain用のCDN配信とHTTPS対応
+4. **Response Headers Policy** - セキュリティヘッダーポリシー
+
+**特徴:**
+
+- S3 website hostingの`RedirectAllRequestsTo`機能を使用
+- コンテンツアップロード不要（自動リダイレクト）
+- AWS公式のベストプラクティスに準拠
+
+**注意**: Route53のDNSレコード（Apex domainのAレコード）は含まれていません。デプロイ後に手動で設定してください。
 
 ### `cicd-role.yaml` で作成されるリソース
 
@@ -352,7 +489,45 @@ Permissions-Policy: geolocation=(), microphone=(), camera=()
   # 共通のDNS管理でこのドメインをAliasレコードとして設定
   ```
 
+### Apex domainリダイレクトが動作しない
+
+- **DNSレコードの確認**: Apex domainのAレコードが正しくCloudFrontを向いているか確認
+
+  ```bash
+  # DNS解決を確認
+  dig example.com
+  nslookup example.com
+  ```
+
+- **S3バケットのWebsite Hosting設定を確認**: S3コンソールでリダイレクト設定が有効になっているか確認
+
+  ```bash
+  # S3バケットのwebsite設定を取得
+  REDIRECT_BUCKET=$(aws cloudformation describe-stacks \
+    --stack-name dev-roar-lab-hp-apex-redirect \
+    --query 'Stacks[0].Outputs[?OutputKey==`RedirectBucketName`].OutputValue' \
+    --output text)
+
+  aws s3api get-bucket-website --bucket $REDIRECT_BUCKET
+  ```
+
+- **CloudFrontのOrigin設定を確認**: OriginがS3 website endpoint（`*.s3-website-*.amazonaws.com`）を指しているか確認（S3 REST endpointではない）
+
+- **ACM証明書のカバレッジ確認**: 証明書がApex domainもカバーしているか確認（ワイルドカード証明書は `*.example.com` のみで `example.com` はカバーしないため注意）
+
+- **リダイレクトのテスト**:
+
+  ```bash
+  # HTTPSリダイレクトを確認（-Lオプションでリダイレクトを追跡）
+  curl -L -I https://example.com
+
+  # または詳細なリダイレクトチェーン確認
+  curl -v https://example.com 2>&1 | grep -E '(HTTP|location:)'
+  ```
+
 ## コスト見積もり
+
+### 基本構成（www subdomainのみ）
 
 個人HPの想定（月間訪問者1000人程度）：
 
@@ -361,3 +536,15 @@ Permissions-Policy: geolocation=(), microphone=(), camera=()
 - Route 53: $0.5/月（カスタムドメイン使用時）
 
 **合計: 約$2-3/月**
+
+### Apex domainリダイレクト追加時
+
+上記に加えて：
+
+- S3ストレージ（リダイレクト用）: $0.01/月未満（ほぼ無料）
+- CloudFront（リダイレクト用）: $0.60/月（固定費）
+- データ転送: $0.01/月未満（リダイレクトのみのため）
+
+**追加コスト: 約$0.60/月**
+
+**合計: 約$2.6-3.6/月**
