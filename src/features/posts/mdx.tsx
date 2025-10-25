@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
 import React from 'react'
+import { OptimizedImage } from './mdx-components'
 
 /**
  * Custom table component for MDX content
@@ -58,30 +58,6 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   }
 
   return <a target="_blank" rel="noopener noreferrer" {...props} />
-}
-
-/**
- * Custom image component for MDX content with rounded corners
- *
- * Validates alt attribute in development mode for accessibility.
- * Wraps Next.js Image component with rounded styling.
- *
- * @param props - Next.js Image component props
- * @returns Styled Image component with rounded corners
- */
-function RoundedImage(props: React.ComponentProps<typeof Image>) {
-  // アクセシビリティのためalt属性を必須とする
-  if (process.env.NODE_ENV === 'development') {
-    if (!props.alt && props.alt !== '') {
-      console.error(
-        `[Accessibility Error] Image requires alt attribute: ${props.src}\n` +
-          `Add alt="..." with descriptive text, or alt="" for decorative images.`
-      )
-    }
-  }
-
-  // eslint-disable-next-line jsx-a11y/alt-text -- alt属性はprops経由で渡される
-  return <Image className="rounded-lg" {...props} />
 }
 
 /**
@@ -175,7 +151,8 @@ function createHeading(level: number) {
  *
  * Maps MDX/Markdown elements to custom React components:
  * - h1-h6: Headings with auto-generated anchor links
- * - Image: Next.js Image with rounded corners
+ * - Image: Optimized image with WebP/AVIF support and lazy loading
+ * - img: Optimized image (MDX default)
  * - a: Links with internal/external handling
  * - code: Syntax-highlighted code blocks
  * - Table: Custom table component
@@ -187,7 +164,8 @@ const components = {
   h4: createHeading(4),
   h5: createHeading(5),
   h6: createHeading(6),
-  Image: RoundedImage,
+  Image: OptimizedImage,
+  img: OptimizedImage,
   a: CustomLink,
   code: Code,
   Table
