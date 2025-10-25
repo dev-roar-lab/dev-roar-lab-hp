@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             <Link
               key={project.slug}
               href={`/projects/${project.slug}`}
-              className="block p-6 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
+              className="block p-6 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400 dark:focus:ring-offset-neutral-900"
             >
               <div className="flex justify-between items-start mb-2">
                 <h2 className="text-xl font-semibold tracking-tight">{project.metadata.title}</h2>

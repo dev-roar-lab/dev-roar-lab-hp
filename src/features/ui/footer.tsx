@@ -9,7 +9,7 @@ import { useLocale } from 'next-intl'
  */
 function GitHubIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -27,7 +27,7 @@ function GitHubIcon() {
  */
 function RSSIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path
         d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"
         fill="currentColor"
@@ -43,7 +43,7 @@ function RSSIcon() {
  */
 function DocsIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path
         d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"
         stroke="currentColor"
@@ -107,13 +107,18 @@ export default function Footer() {
         {socialLinks.map(({ name, href, icon: Icon, isExternal }) => (
           <li key={name}>
             <a
-              className="flex items-center gap-2 transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+              className="flex items-center gap-2 transition-all hover:text-neutral-800 dark:hover:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400 dark:focus:ring-offset-neutral-900 rounded"
               rel={isExternal ? 'noopener noreferrer' : undefined}
               target={isExternal ? '_blank' : undefined}
               href={href}
+              aria-label={
+                isExternal
+                  ? `${name.charAt(0).toUpperCase() + name.slice(1)} (opens in new tab)`
+                  : name.charAt(0).toUpperCase() + name.slice(1)
+              }
             >
               <Icon />
-              <span>{name}</span>
+              <span aria-hidden="true">{name}</span>
             </a>
           </li>
         ))}

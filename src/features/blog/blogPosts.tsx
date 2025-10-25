@@ -33,7 +33,7 @@ export function BlogPosts({ locale }: { locale: string }) {
           return (
             <Link
               key={post.slug}
-              className="block group p-4 -mx-4 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
+              className="block group p-4 -mx-4 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400 dark:focus:ring-offset-neutral-900"
               href={`/blog/${post.slug}`}
             >
               <div className="flex flex-col space-y-2">
