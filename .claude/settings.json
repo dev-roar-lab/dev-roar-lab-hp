@@ -39,7 +39,8 @@
       "Write(/**/*.html)",
       "Write(/**/*.css)",
       "Bash(mkdir:*)",
-      "Bash(rm playwright-screenshots/*.png)"
+      "Bash(rm playwright-screenshots/*.png)",
+      "Bash(npx prettier:*)"
     ],
     "deny": [],
     "ask": []
