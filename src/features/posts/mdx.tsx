@@ -61,6 +61,25 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 /**
+ * Custom pre component for MDX content with keyboard accessibility
+ *
+ * Makes scrollable code blocks keyboard accessible by adding:
+ * - tabindex="0" to allow keyboard focus
+ * - role="region" for semantic meaning
+ * - aria-label for screen readers
+ *
+ * @param props - Pre element props
+ * @returns Pre element with keyboard accessibility
+ */
+function Pre({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) {
+  return (
+    <pre tabIndex={0} role="region" aria-label="Code block" {...props}>
+      {children}
+    </pre>
+  )
+}
+
+/**
  * Custom code component for MDX content with syntax highlighting
  *
  * Uses sugar-high for syntax highlighting.
@@ -154,6 +173,7 @@ function createHeading(level: number) {
  * - Image: Optimized image with WebP/AVIF support and lazy loading
  * - img: Optimized image (MDX default)
  * - a: Links with internal/external handling
+ * - pre: Code block container with keyboard accessibility
  * - code: Syntax-highlighted code blocks
  * - Table: Custom table component
  */
@@ -167,6 +187,7 @@ const components = {
   Image: OptimizedImage,
   img: OptimizedImage,
   a: CustomLink,
+  pre: Pre,
   code: Code,
   Table
 }
