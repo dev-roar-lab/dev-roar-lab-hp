@@ -6,6 +6,7 @@
 
 [![CI](https://github.com/dev-roar-lab/dev-roar-lab-hp/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-roar-lab/dev-roar-lab-hp/actions/workflows/ci.yml)
 [![Deploy](https://github.com/dev-roar-lab/dev-roar-lab-hp/actions/workflows/deploy.yml/badge.svg)](https://github.com/dev-roar-lab/dev-roar-lab-hp/actions/workflows/deploy.yml)
+[![Deploy Docs](https://github.com/dev-roar-lab/dev-roar-lab-hp/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/dev-roar-lab/dev-roar-lab-hp/actions/workflows/deploy-docs.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://react.dev/)
