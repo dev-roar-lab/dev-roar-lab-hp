@@ -1,35 +1,42 @@
 name: Deploy to AWS
 
+# Trigger only after CI workflow completes successfully on main branch
+# This ensures deployment only happens when all tests pass
 on:
-  push:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
     branches: [main]
 
 permissions:
   id-token: write
   contents: read
+  actions: read # Required to download artifacts from CI workflow
 
 jobs:
   deploy:
+    # Only run if CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
+    # Require manual approval via GitHub Environment
+    # Configure in: Settings → Environments → production
+    environment: production
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # Download build artifacts from CI workflow
+      # No need to rebuild - use cached artifacts for faster deployment
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          name: build-output
+          path: out/
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        env:
-          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
-        run: npm run build
-
+      # AWS authentication using OIDC and Role Chaining
+      # Secrets should be configured in the 'production' Environment
+      # (not Repository secrets) for additional security
       - name: Configure AWS credentials (Bridge Role)
         uses: aws-actions/configure-aws-credentials@v4
         with:

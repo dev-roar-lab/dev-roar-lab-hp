@@ -40,7 +40,11 @@
       "Write(/**/*.css)",
       "Bash(mkdir:*)",
       "Bash(rm playwright-screenshots/*.png)",
-      "Bash(npx prettier:*)"
+      "Bash(npx prettier:*)",
+      "Edit(/**/*.yml)",
+      "Edit(/**/*.yaml)",
+      "Write(/**/*.yml)",
+      "Write(/**/*.yaml)"
     ],
     "deny": [],
     "ask": []

@@ -1,7 +1,11 @@
 name: Deploy Documentation
 
+# Trigger only after CI workflow completes successfully on main branch
+# Also allow manual trigger for emergency deployments
 on:
-  push:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 
@@ -16,7 +20,14 @@ concurrency:
 
 jobs:
   build:
+    # Only run if CI workflow succeeded (skip check for manual dispatch)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+
+    # Require manual approval via GitHub Environment
+    # Configure in: Settings → Environments → production
+    environment: production
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
