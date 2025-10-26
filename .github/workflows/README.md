@@ -4,23 +4,35 @@
 
 ## ワークフロー概要
 
-このプロジェクトでは、**セキュリティを重視した3段階のCI/CDパイプライン**を採用しています：
+このプロジェクトでは、**高速かつセキュアなCI/CDパイプライン**を採用しています：
 
 ```
-1. CI実行（自動） → 2. 手動承認（必須） → 3. デプロイ実行（自動）
+1. CI実行（並列・高速） → 2. 手動承認（1回） → 3. デプロイ実行（並列）
 ```
 
 ### フロー図
 
 ```
-PR作成 → CI実行 → ✅/❌ 結果表示
+PR作成 → CI実行（並列）
+         ├─ Format Check ─┐
+         ├─ Lint ─────────┤
+         ├─ Type Check ───┼→ Build → Accessibility Tests
+         └─ Unit Tests ───┘
+         ↓
+         ✅/❌ 結果表示
+
+mainにマージ → CI実行（並列） → ✅ 全ジョブ成功
    ↓
-mainにマージ → CI実行 → ✅ 成功
-   ↓
-手動承認待機（GitHub Environment: production）
+手動承認待機（GitHub Environment: production）※1回の承認で両方デプロイ
    ↓
 承認後 → AWS S3デプロイ + GitHub Pagesデプロイ（並列実行）
 ```
+
+### 高速化のポイント
+
+✅ **CI並列化**: format/lint/type-check/testを並列実行
+✅ **デプロイ統合**: 1回の承認で両方のデプロイを実行
+✅ **ビルドキャッシュ**: CIで生成したビルド成果物を再利用
 
 ## ワークフロー詳細
 
@@ -31,42 +43,29 @@ mainにマージ → CI実行 → ✅ 成功
 - PR作成時（mainブランチ向け）
 - main/developブランチへのpush時
 
-**実行内容:**
+**ジョブ構成（並列実行）:**
 
-- コードフォーマットチェック (`npm run verify-format`)
-- ESLintによるリンティング (`npm run lint`)
-- TypeScript型チェック (`npx tsc --noEmit`)
-- ユニットテスト実行 (`npm test -- --run`)
-- ビルド (`npm run build`)
-- ビルド成果物のアップロード（7日間保持）
-- Playwrightアクセシビリティテスト (`npm run test:a11y`)
+1. **format-check**: コードフォーマットチェック (`npm run verify-format`)
+2. **lint**: ESLintによるリンティング (`npm run lint`)
+3. **type-check**: TypeScript型チェック (`npx tsc --noEmit`)
+4. **test**: ユニットテスト実行 (`npm test -- --run`)
+5. **build**: ビルド実行（上記4つのジョブが成功後）
+   - ビルド成果物のアップロード（7日間保持）
+6. **accessibility-test**: アクセシビリティテスト（ビルド成功後）
+   - Playwrightでのa11yテスト実行
+
+**並列化の効果:**
+
+- format/lint/type-check/testが同時実行され、CI時間を短縮
+- buildはすべてのチェックが成功してから実行
+- 1つでも失敗すればbuildは実行されない
 
 **セキュリティ:**
 
 - 権限を最小化（`permissions: contents: read`）
 - PRからはシークレットにアクセス不可
 
-### 2. Deploy to AWS (`deploy.yml`)
-
-**トリガー:**
-
-- CIワークフローが**成功**した後のみ（`workflow_run`）
-- mainブランチのみ
-
-**実行内容:**
-
-- CIで生成したビルド成果物をダウンロード（再ビルド不要）
-- AWS認証（OIDC + Role Chaining）
-- S3へのデプロイ (`aws s3 sync`)
-- CloudFrontキャッシュの無効化 (`aws cloudfront create-invalidation`)
-
-**セキュリティ:**
-
-- **手動承認が必須**（GitHub Environment: `production`）
-- CI失敗時はデプロイをスキップ
-- mainブランチからのみデプロイ可能
-
-### 3. Deploy Documentation (`deploy-docs.yml`)
+### 2. Deploy (`deploy.yml`)
 
 **トリガー:**
 
@@ -74,15 +73,29 @@ mainにマージ → CI実行 → ✅ 成功
 - mainブランチのみ
 - 手動実行も可能（`workflow_dispatch`）
 
-**実行内容:**
+**ジョブ構成:**
 
-- Storybookドキュメントのビルド (`npm run docs:build`)
-- GitHub Pagesへのデプロイ
+1. **approval**: 手動承認ゲート（1回の承認で両方のデプロイを実行）
+2. **deploy-aws**: AWS S3 + CloudFrontへのデプロイ（承認後に並列実行）
+   - CIで生成したビルド成果物をダウンロード
+   - AWS認証（OIDC + Role Chaining）
+   - S3へのデプロイ (`aws s3 sync`)
+   - CloudFrontキャッシュの無効化
+3. **deploy-docs**: GitHub Pagesへのデプロイ（承認後に並列実行）
+   - Storybookドキュメントのビルド (`npm run docs:build`)
+   - GitHub Pagesへのデプロイ
+
+**統合のメリット:**
+
+- **1回の承認で両方デプロイ**: 承認作業が1回で済む
+- **並列デプロイ**: AWS S3とGitHub Pagesが同時にデプロイされ、時間短縮
+- **一貫性**: 同じタイミングで両方のデプロイが完了
 
 **セキュリティ:**
 
 - **手動承認が必須**（GitHub Environment: `production`）
 - CI失敗時はデプロイをスキップ
+- mainブランチからのみデプロイ可能
 
 ## セットアップ手順
 
@@ -111,11 +124,17 @@ mainブランチを保護し、CIが通っていないPRをマージできない
      - Require approvals: 1
    - ✅ **Require status checks to pass before merging**
      - ✅ Require branches to be up to date before merging
-     - Status checks: `test` を選択（CI実行後に表示されます）
+     - Status checks（CI実行後に表示されます）:
+       - `Format Check`
+       - `Lint`
+       - `Type Check`
+       - `Unit Tests`
+       - `Build`
+       - `Accessibility Tests`
    - ✅ **Require conversation resolution before merging**
    - ✅ **Do not allow bypassing the above settings**
 
-**効果:** CIが失敗したPRはマージできなくなります。
+**効果:** すべてのCIジョブが成功しないとPRをマージできなくなります。
 
 #### 0-3. CODEOWNERS設定（推奨）
 
@@ -266,15 +285,19 @@ Settings → Secrets and variables → Actions → "Repository secrets" で以�
 #### 3-2. mainへのマージとデプロイ
 
 1. PRをmainブランチにマージ
-2. CIワークフローが自動実行されることを確認
-3. CI成功後、`Deploy to AWS` と `Deploy Documentation` ワークフローが**待機状態**になることを確認
-4. Actions → 該当のワークフロー → "Review deployments" ボタンをクリック
+2. CIワークフローが自動実行されることを確認（並列実行）
+   - Format Check, Lint, Type Check, Unit Tests が並列実行
+   - すべて成功後に Build が実行
+   - Build成功後に Accessibility Tests が実行
+3. CI成功後、`Deploy` ワークフローが**待機状態**になることを確認
+4. Actions → Deploy ワークフロー → "Review deployments" ボタンをクリック
 5. 承認者が内容を確認し、"Approve and deploy" をクリック
-6. デプロイが実行されることを確認
+6. **1回の承認で両方のデプロイ**が並列実行されることを確認:
+   - Deploy to AWS ジョブ
+   - Deploy Documentation ジョブ
 7. Summary画面に以下が表示されることを確認:
-   - S3バケット名
-   - CloudFrontディストリビューションID
-   - 無効化ID
+   - AWS Deployment Summary（S3バケット名、CloudFrontディストリビューションID、無効化ID）
+   - Documentation Deployment Summary（デプロイURL）
 
 #### 3-3. CIが失敗したPRのマージブロック
 
@@ -314,15 +337,16 @@ Settings → Secrets and variables → Actions → "Repository secrets" で以�
 
 ### デプロイワークフローが "Waiting" 状態で止まっている
 
-**症状:** デプロイワークフローが黄色の "Waiting for approval" 状態
+**症状:** `Deploy` ワークフローの `Await Deployment Approval` ジョブが黄色の "Waiting for approval" 状態
 
 **対処:**
 
 これは正常な動作です。手動承認が必要です。
 
-1. Actions → 該当のワークフロー実行をクリック
+1. Actions → Deploy ワークフロー実行をクリック
 2. "Review deployments" ボタンをクリック
 3. 内容を確認して "Approve and deploy" をクリック
+4. 承認後、`Deploy to AWS` と `Deploy Documentation` ジョブが並列実行されます
 
 **注意:** 承認者として設定されたユーザーのみが承認できます。
 

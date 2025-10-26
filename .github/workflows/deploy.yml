@@ -1,4 +1,4 @@
-name: Deploy to AWS
+name: Deploy
 
 # Trigger only after CI workflow completes successfully on main branch
 # This ensures deployment only happens when all tests pass
@@ -7,21 +7,44 @@ on:
     workflows: ['CI']
     types: [completed]
     branches: [main]
+  workflow_dispatch: # Allow manual trigger for emergency deployments
 
 permissions:
   id-token: write
   contents: read
   actions: read # Required to download artifacts from CI workflow
+  pages: write # Required for GitHub Pages deployment
 
 jobs:
-  deploy:
-    # Only run if CI workflow succeeded
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  # Single approval gate for both deployments
+  # This job requires manual approval and creates a checkpoint
+  approval:
+    name: Await Deployment Approval
+    # Only run if CI workflow succeeded (skip check for manual dispatch)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     # Require manual approval via GitHub Environment
     # Configure in: Settings → Environments → production
     environment: production
+
+    steps:
+      - name: Approval checkpoint
+        run: |
+          echo "## Deployment Approved :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Approved by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "Triggered by: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The following deployments will proceed:" >> $GITHUB_STEP_SUMMARY
+          echo "- AWS S3 + CloudFront" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub Pages (Documentation)" >> $GITHUB_STEP_SUMMARY
+
+  # Deploy to AWS S3 + CloudFront
+  deploy-aws:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    needs: approval
 
     steps:
       # Download build artifacts from CI workflow
@@ -67,9 +90,9 @@ jobs:
 
           echo "invalidation-id=$INVALIDATION_ID" >> $GITHUB_OUTPUT
 
-      - name: Deployment summary
+      - name: AWS deployment summary
         run: |
-          echo "## Deployment Summary :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "## AWS Deployment Summary :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
           echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
@@ -78,3 +101,44 @@ jobs:
           echo "| Invalidation ID | \`${{ steps.invalidation.outputs.invalidation-id }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "> :hourglass: CloudFront invalidation may take a few minutes to complete." >> $GITHUB_STEP_SUMMARY
+
+  # Deploy documentation to GitHub Pages
+  deploy-docs:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: approval
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run docs:build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs-site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Documentation deployment summary
+        run: |
+          echo "## Documentation Deployment Summary :book:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Deployment URL | ${{ steps.deployment.outputs.page_url }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> :sparkles: Documentation is now live!" >> $GITHUB_STEP_SUMMARY

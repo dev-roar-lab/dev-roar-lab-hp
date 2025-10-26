@@ -96,19 +96,34 @@ fi
 echo ""
 echo "Step 3: Configuring Branch Protection Rules for 'main' branch..."
 
+# Use JSON input for complex array configuration
 gh api "repos/${REPO}/branches/main/protection" -X PUT \
-    -f "required_status_checks[strict]=true" \
-    -f "required_status_checks[contexts][]=test" \
-    -f "enforce_admins=false" \
-    -f "required_pull_request_reviews[required_approving_review_count]=1" \
-    -f "required_pull_request_reviews[dismiss_stale_reviews]=false" \
-    -f "required_pull_request_reviews[require_code_owner_reviews]=true" \
-    -f "required_conversation_resolution=true" \
-    -f "restrictions=null" \
-    > /dev/null 2>&1 || {
+    --input - > /dev/null 2>&1 <<'PROTECTION_EOF' || {
         echo -e "${YELLOW}Note: Branch protection may require admin permissions${NC}"
         echo -e "${YELLOW}Please configure manually if this step fails${NC}"
     }
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": [
+      "Format Check",
+      "Lint",
+      "Type Check",
+      "Unit Tests",
+      "Build",
+      "Accessibility Tests"
+    ]
+  },
+  "enforce_admins": false,
+  "required_pull_request_reviews": {
+    "dismiss_stale_reviews": false,
+    "require_code_owner_reviews": true,
+    "required_approving_review_count": 1
+  },
+  "restrictions": null,
+  "required_conversation_resolution": true
+}
+PROTECTION_EOF
 
 echo -e "${GREEN}✓ Branch protection rules configured${NC}"
 
