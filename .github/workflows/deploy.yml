@@ -16,14 +16,52 @@ permissions:
   pages: write # Required for GitHub Pages deployment
 
 jobs:
+  # Detect which files changed to optimize deployment execution
+  changes:
+    name: Detect Changes
+    # Only run if CI workflow succeeded (skip for manual dispatch as it doesn't have workflow_run context)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # For workflow_dispatch, checkout the current branch
+          # For workflow_run, checkout the triggering commit
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.event.workflow_run.head_sha }}
+
+      - name: Check for deployment-related changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            app:
+              - 'src/**'
+              - 'public/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'next.config.ts'
+              - 'tailwind.config.ts'
+              - 'tsconfig.json'
+              - 'postcss.config.mjs'
+            docs:
+              - 'src/**/*.stories.tsx'
+              - '.storybook/**'
+              - 'typedoc.json'
+
   # Single approval gate for both deployments
   # This job requires manual approval and creates a checkpoint
   approval:
     name: Await Deployment Approval
-    # Only run if CI workflow succeeded (skip check for manual dispatch)
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    needs: changes
+    # Only run if there are app or docs changes (or manual dispatch)
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (needs.changes.outputs.app == 'true' || needs.changes.outputs.docs == 'true')
     runs-on: ubuntu-latest
-
     # Require manual approval via GitHub Environment
     # Configure in: Settings → Environments → production
     environment: production
@@ -44,7 +82,11 @@ jobs:
   deploy-aws:
     name: Deploy to AWS
     runs-on: ubuntu-latest
-    needs: approval
+    needs: [changes, approval]
+    # Only run if app files changed (or manual dispatch)
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      needs.changes.outputs.app == 'true'
 
     steps:
       # Download build artifacts from CI workflow
@@ -106,7 +148,11 @@ jobs:
   deploy-docs:
     name: Deploy Documentation
     runs-on: ubuntu-latest
-    needs: approval
+    needs: [changes, approval]
+    # Only run if docs-related files changed (or manual dispatch)
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      needs.changes.outputs.docs == 'true'
 
     steps:
       - name: Checkout
