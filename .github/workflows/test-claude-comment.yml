@@ -19,7 +19,7 @@ jobs:
         env:
           # Personal Access Tokenを使用することで、Claude Code Actionが
           # botではなく人間のコメントとして認識し、反応するようになります
-          GH_TOKEN: ${{ secrets.GITHUB_PAT }}
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           gh issue comment ${{ inputs.issue_number }} \
             --repo ${{ github.repository }} \
@@ -35,4 +35,4 @@ jobs:
           echo "1. Issue #${{ inputs.issue_number }} を確認"
           echo "2. Claude Code Actionが反応するか確認"
           echo ""
-          echo "⚠️ 注意: GITHUB_PATシークレットが設定されている必要があります"
+          echo "⚠️ 注意: PERSONAL_ACCESS_TOKENシークレットが設定されている必要があります"
