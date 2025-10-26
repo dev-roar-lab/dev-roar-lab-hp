@@ -26,11 +26,21 @@ import {
 import { ComponentType } from 'react'
 
 // Custom icons for technologies not available in react-icons
-import { PlaywrightIcon } from './customIcons'
+import { PlaywrightIcon, CustomIconProps } from './customIcons'
+
+/**
+ * Icon component props for tech icons
+ * Supports both react-icons and custom icons
+ */
+export interface IconProps {
+  size?: number | string
+  color?: string
+  className?: string
+  style?: React.CSSProperties
+}
 
 export interface TechInfo {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: IconType | ComponentType<any>
+  icon: IconType | ComponentType<IconProps | CustomIconProps>
   color: string
 }
 
