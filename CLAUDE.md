@@ -299,6 +299,36 @@ Optional detailed description after blank line.
 - `test` - Test additions or modifications
 - `chore` - Build, CI/CD, dependencies
 
+### GitHub Pull Request Guidelines
+
+**Language**: All PR titles and descriptions must be written in **Japanese** (日本語).
+
+**Format**:
+
+- Title: Same format as commit messages (`{prefix}: 変更内容の要約`)
+- Description: Use Japanese for all sections (Summary, Changes, Test Results, etc.)
+
+**Example**:
+
+```markdown
+## 概要
+
+アクセシビリティテストのCI実行速度を改善します。
+
+## 変更内容
+
+- `playwright.config.ts`: CI環境のworker数を調整
+- `.github/workflows/ci.yml`: ブラウザごとにジョブを分離
+
+## パフォーマンス影響
+
+- 改善前: 2.6分
+- 改善後: 30-45秒
+- 改善率: 約70-80%高速化
+```
+
+**Important**: When creating PRs with `gh pr create`, always write the title and body in Japanese.
+
 ### Pre-commit Hooks
 
 Husky + lint-staged automatically run on commit:
