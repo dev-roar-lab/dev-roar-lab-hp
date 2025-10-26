@@ -1,4 +1,4 @@
-name: Test Claude Comment
+name: Test Claude Comment (PAT)
 
 on:
   workflow_dispatch:
@@ -9,16 +9,17 @@ on:
         type: number
 
 permissions:
-  issues: write
   contents: read
 
 jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Comment on issue with @claude mention
+      - name: Comment on issue with @claude mention (using PAT)
         env:
-          GH_TOKEN: ${{ github.token }}
+          # Personal Access Tokenを使用することで、Claude Code Actionが
+          # botではなく人間のコメントとして認識し、反応するようになります
+          GH_TOKEN: ${{ secrets.GITHUB_PAT }}
         run: |
           gh issue comment ${{ inputs.issue_number }} \
             --repo ${{ github.repository }} \
@@ -28,9 +29,10 @@ jobs:
         run: |
           echo "✅ コメントを投稿しました"
           echo "📝 Issue: #${{ inputs.issue_number }}"
-          echo "🤖 投稿者: github-actions[bot]"
+          echo "🔑 投稿者: PATの持ち主（人間アカウント）"
           echo ""
           echo "次のステップ:"
           echo "1. Issue #${{ inputs.issue_number }} を確認"
           echo "2. Claude Code Actionが反応するか確認"
-          echo "3. 反応しない場合は、手動で@claudeメンションを追加して比較"
+          echo ""
+          echo "⚠️ 注意: GITHUB_PATシークレットが設定されている必要があります"

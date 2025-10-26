@@ -36,8 +36,10 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
-          # Allow github-actions[bot] to trigger Claude Code Action
-          allowed_bots: '*'
+          # NOTE: github-actions[bot]からのトリガーは現状うまく動作しないため、
+          # Personal Access Token (PAT)を使用してコメント投稿する運用としています。
+          # 将来的に改善された場合は以下のコメントを解除してください。
+          # allowed_bots: 'github-actions[bot]'
 
           # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
