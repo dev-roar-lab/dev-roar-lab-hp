@@ -11,8 +11,6 @@
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
 
-[English](./README.md) | [日本語](./README.ja.md)
-
 </div>
 
 ---
@@ -38,9 +36,9 @@
 
 **Dev Roar Lab HP**は、Next.js 15のApp RouterとMDXを活用した、多言語対応のモダンなWebアプリケーションです。Static Site Generation (SSG)により高速なページ表示を実現し、AWS S3 + CloudFront でホスティングしています。
 
-### 🌐 デモサイト
+### 🌐 公開サイト
 
-- **本番環境**: [https://dev-roar-lab.com](https://dev-roar-lab.com) _(設定後に更新)_
+- **本番環境**: [https://www.dev-roar-lab.com](https://www.dev-roar-lab.com)
 
 ---
 
