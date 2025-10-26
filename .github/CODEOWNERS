@@ -3,9 +3,7 @@
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
 # GitHub Actions workflows require review to prevent malicious changes
-# IMPORTANT: Replace with actual GitHub usernames or team names
-# Example: /@username or /@org-name/team-name
-/.github/workflows/ @dev-roar-lab/admins
+/.github/workflows/ @dev-roar-researcher
 
 # CloudFormation templates (infrastructure changes)
-/cloudformation/ @dev-roar-lab/admins
+/cloudformation/ @dev-roar-researcher
