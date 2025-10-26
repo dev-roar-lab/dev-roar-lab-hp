@@ -33,7 +33,8 @@ const eslintConfig = [
           terms: ['todo'], // 追加したいキーワード
           location: 'anywhere'
         }
-      ]
+      ],
+      '@typescript-eslint/no-explicit-any': 'error'
     }
   }
 ]
