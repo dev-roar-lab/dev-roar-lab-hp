@@ -1,0 +1,36 @@
+name: Test Claude Comment
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to comment on'
+        required: true
+        type: number
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on issue with @claude mention
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment ${{ inputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "@claude このissueの内容を確認して、改善提案をお願いします。"
+
+      - name: Output test info
+        run: |
+          echo "✅ コメントを投稿しました"
+          echo "📝 Issue: #${{ inputs.issue_number }}"
+          echo "🤖 投稿者: github-actions[bot]"
+          echo ""
+          echo "次のステップ:"
+          echo "1. Issue #${{ inputs.issue_number }} を確認"
+          echo "2. Claude Code Actionが反応するか確認"
+          echo "3. 反応しない場合は、手動で@claudeメンションを追加して比較"
