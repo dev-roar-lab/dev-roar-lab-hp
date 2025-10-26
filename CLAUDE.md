@@ -108,6 +108,12 @@ npm run storybook        # Start Storybook dev server on port 6006
 npm run build-storybook  # Build Storybook for production
 ```
 
+### Image Optimization
+
+```bash
+npm run optimize-images  # Optimize images using Sharp (automatically runs before build)
+```
+
 ### Bundle Analysis
 
 ```bash
@@ -121,6 +127,17 @@ After running `npm run analyze`, the following reports are generated:
 - `.next/analyze/edge.html` - Edge runtime bundle analysis
 
 Open these HTML files in a browser to visualize bundle composition and identify optimization opportunities.
+
+### Documentation Generation
+
+```bash
+npm run docs:storybook   # Build Storybook documentation (output to docs-site/storybook)
+npm run docs:typedoc     # Generate TypeDoc API documentation (output to docs-site/api)
+npm run docs:portal      # Copy documentation portal assets
+npm run docs:inject-version  # Inject version number into documentation
+npm run docs:build       # Build all documentation (runs all above commands)
+npm run docs:clean       # Clean documentation build artifacts
+```
 
 ### Deployment (AWS S3 + CloudFront)
 
@@ -196,6 +213,7 @@ src/
 │   └── request.ts        # Server-side i18n utilities
 ├── lib/                  # Shared libraries
 │   └── site.ts          # Site configuration
+├── stories/              # Additional Storybook stories
 └── middleware.ts         # next-intl middleware for locale handling
 tests/                    # E2E and accessibility tests (Playwright)
 ├── accessibility-homepage.spec.ts
@@ -237,6 +255,16 @@ This design allows importing and composing individual functions as needed, rathe
 - `images.unoptimized: true` because Image Optimization API isn't available in static export
 - Build output goes to `out/` directory
 - All routes must be statically generated via `generateStaticParams()`
+
+### Next.js Configuration Enhancements
+
+The following optimizations are configured in `next.config.ts`:
+
+- **Security**: `poweredByHeader: false` - Disables X-Powered-By header
+- **Performance**: `compress: true` - Enables gzip compression
+- **Static Export**: `trailingSlash: true` - Adds trailing slashes to URLs for S3 compatibility
+- **Versioning**: `env.NEXT_PUBLIC_APP_VERSION` - Injects package.json version into environment
+- **Bundle Analysis**: Integrated `@next/bundle-analyzer` (enabled with `ANALYZE=true`)
 
 ## Code Patterns
 
@@ -440,8 +468,8 @@ This project uses **Vitest** for unit testing with comprehensive test coverage.
 ### Test Structure
 
 - **Unit Tests**: Located in `__tests__/` directories next to source files
-- **Test Files**: 7 test files with 106 test cases (all passing)
-- **Coverage**: Target 70% (lines, branches, statements), 75% (functions)
+- **Test Files**: 8 test files with 124 test cases (all passing)
+- **Coverage**: Current thresholds - 9% (lines, statements), 75% (functions), 85% (branches)
 - **Configuration**: `vitest.config.ts` with workspace setup
 
 ### Test Coverage Status
@@ -458,7 +486,7 @@ Currently tested modules:
 
 ### Storybook Tests
 
-Storybook component tests are currently **disabled** due to compatibility issues between `@storybook/experimental-nextjs-vite@8.6.12` and Next.js 15.5.4. See `vitest.config.ts` for details.
+Storybook component tests are currently **disabled** due to compatibility issues between Storybook's Vite integration and Next.js 15.5.4. See `vitest.config.ts` for details.
 
 ### Running Tests
 
@@ -494,6 +522,8 @@ npm run test:coverage # Generate coverage report
 - **Vitest 3.1.2** for unit testing
 - **Playwright 1.56.1** for E2E testing
 - **@axe-core/playwright 4.11.0** for accessibility testing (WCAG 2.1 AA compliance)
-- **Storybook 8.6.12** for component development
+- **Storybook 9.1.13** for component development
 - **ESLint 9.37.0** + **Prettier 3.5.3** for code quality
 - **Husky 9.1.7** + **lint-staged 15.5.1** for pre-commit hooks
+- **next-themes 0.4.6** for theme management
+- **web-vitals 5.1.0** for performance metrics

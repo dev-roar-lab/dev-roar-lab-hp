@@ -88,15 +88,15 @@
 
 ### 開発ツール
 
-| 技術                                                      | 用途                       |
-| --------------------------------------------------------- | -------------------------- |
-| [Storybook](https://storybook.js.org/)                    | コンポーネントドキュメント |
-| [Vitest](https://vitest.dev/)                             | テストフレームワーク       |
-| [Playwright](https://playwright.dev/)                     | ブラウザテスト             |
-| [ESLint](https://eslint.org/)                             | コードリンティング         |
-| [Prettier](https://prettier.io/)                          | コードフォーマット         |
-| [Husky](https://typicode.github.io/husky/)                | Git hooks                  |
-| [lint-staged](https://github.com/lint-staged/lint-staged) | Pre-commit checks          |
+| 技術                                                      | バージョン | 用途                       |
+| --------------------------------------------------------- | ---------- | -------------------------- |
+| [Storybook](https://storybook.js.org/)                    | 9.1.13     | コンポーネントドキュメント |
+| [Vitest](https://vitest.dev/)                             | 3.1.2      | テストフレームワーク       |
+| [Playwright](https://playwright.dev/)                     | 1.56.1     | ブラウザテスト             |
+| [ESLint](https://eslint.org/)                             | 9.37.0     | コードリンティング         |
+| [Prettier](https://prettier.io/)                          | 3.5.3      | コードフォーマット         |
+| [Husky](https://typicode.github.io/husky/)                | 9.1.7      | Git hooks                  |
+| [lint-staged](https://github.com/lint-staged/lint-staged) | 15.5.1     | Pre-commit checks          |
 
 ### インフラ・CI/CD
 
@@ -107,12 +107,13 @@
 | AWS CloudFront                                        | CDN配信            |
 | AWS CloudFormation                                    | インフラ管理       |
 
-### 分析
+### 分析・最適化
 
-| 技術                  | 用途               |
-| --------------------- | ------------------ |
-| Vercel Analytics      | アクセス解析       |
-| Vercel Speed Insights | パフォーマンス計測 |
+| 技術                  | 用途                     |
+| --------------------- | ------------------------ |
+| web-vitals            | パフォーマンスメトリクス |
+| @next/bundle-analyzer | バンドルサイズ分析       |
+| Sharp                 | 画像最適化               |
 
 ---
 
@@ -205,11 +206,14 @@ npm run test:coverage
 
 ### テストカバレッジ
 
-現在のカバレッジ:
+現在のテスト状況:
 
-- **formatDate.ts**: 100% ✅
-- **parseFrontmatter.ts**: 100% ✅
-- **全体**: 3.79% (目標: 70%)
+- **テストファイル数**: 8ファイル
+- **テストケース数**: 124テスト（全パス）
+- **カバレッジ閾値**:
+  - Lines/Statements: 9%
+  - Functions: 75% ✅
+  - Branches: 85% ✅
 
 ---
 
@@ -291,7 +295,8 @@ src/
 │   └── request.ts        # サーバーサイドi18n
 ├── lib/                  # 共有ライブラリ
 │   └── site.ts          # サイト設定
-└── stories/              # Storybookストーリー
+├── stories/              # Storybookストーリー
+└── middleware.ts         # next-intlミドルウェア
 ```
 
 ### 多言語対応（i18n）
