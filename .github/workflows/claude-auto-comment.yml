@@ -1,12 +1,12 @@
 name: Claude Auto Comment
 
 on:
-  schedule:
-    # 23時から翌朝9時まで、1時間に1回実行 (UTC時刻で指定: JST-9h)
-    # 23時 (JST) = 14時 (UTC)
-    # 0時-8時 (JST) = 15時-23時 (UTC前日), 0時-8時 (UTC)
-    - cron: '0 14-23 * * *' # 23時-翌8時 (JST)
-    - cron: '0 0-9 * * *' # 9時-18時 (JST) ※このうち0時のみが該当
+  # schedule:
+  #   # 23時から翌朝9時まで、1時間に1回実行 (UTC時刻で指定: JST-9h)
+  #   # 23時 (JST) = 14時 (UTC)
+  #   # 0時-8時 (JST) = 15時-23時 (UTC前日), 0時-8時 (UTC)
+  #   - cron: '0 14-23 * * *' # 23時-翌8時 (JST)
+  #   - cron: '0 0-9 * * *' # 9時-18時 (JST) ※このうち0時のみが該当
   workflow_dispatch: # 手動実行も可能
 
 permissions:
