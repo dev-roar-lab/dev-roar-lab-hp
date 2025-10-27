@@ -1,3 +1,26 @@
+/**
+ * Site-wide configuration object
+ *
+ * Contains essential information about the website including site name, URL,
+ * author information, and internationalization settings.
+ *
+ * @property {string} name - The name of the website
+ * @property {string} url - The base URL of the website (defaults to production URL)
+ * @property {object} author - Author information
+ * @property {string} author.name - Author's name
+ * @property {string} author.github - Author's GitHub profile URL
+ * @property {string} author.githubRepo - Repository URL for the website
+ * @property {string} defaultLocale - Default locale for the website
+ * @property {string[]} locales - Supported locales
+ *
+ * @example
+ * ```typescript
+ * import { siteConfig } from '@/lib/site'
+ *
+ * console.log(siteConfig.name) // 'Dev Roar Lab'
+ * console.log(siteConfig.author.github) // 'https://github.com/dev-roar-researcher'
+ * ```
+ */
 export const siteConfig = {
   name: 'Dev Roar Lab',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dev-roar-lab.com',
@@ -10,6 +33,32 @@ export const siteConfig = {
   locales: ['ja', 'en'] as const
 }
 
+/**
+ * Locale-specific metadata for SEO and social sharing
+ *
+ * Contains localized title, description, and keywords for each supported locale.
+ * Used for generating meta tags, OpenGraph data, and other SEO-related content.
+ *
+ * @property {object} ja - Japanese locale metadata
+ * @property {string} ja.title - Site title in Japanese
+ * @property {string} ja.description - Site description in Japanese
+ * @property {string[]} ja.keywords - SEO keywords in Japanese
+ * @property {object} en - English locale metadata
+ * @property {string} en.title - Site title in English
+ * @property {string} en.description - Site description in English
+ * @property {string[]} en.keywords - SEO keywords in English
+ *
+ * @example
+ * ```typescript
+ * import { siteMetadata } from '@/lib/site'
+ *
+ * // Get metadata for current locale
+ * const locale = 'ja'
+ * const metadata = siteMetadata[locale]
+ * console.log(metadata.title) // 'Dev Roar Lab'
+ * console.log(metadata.description) // 'Dev Roar Labのポートフォリオサイト...'
+ * ```
+ */
 export const siteMetadata = {
   ja: {
     title: 'Dev Roar Lab',
