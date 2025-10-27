@@ -1,12 +1,12 @@
 name: Claude Auto Comment
 
 on:
-  # schedule:
-  #   # 23時から翌朝9時まで、1時間に1回実行 (UTC時刻で指定: JST-9h)
-  #   # 23時 (JST) = 14時 (UTC)
-  #   # 0時-8時 (JST) = 15時-23時 (UTC前日), 0時-8時 (UTC)
-  #   - cron: '0 14-23 * * *' # 23時-翌8時 (JST)
-  #   - cron: '0 0-9 * * *' # 9時-18時 (JST) ※このうち0時のみが該当
+  schedule:
+    # 23時から翌朝9時まで、1時間に1回実行 (UTC時刻で指定: JST-9h)
+    # 23時 (JST) = 14時 (UTC)
+    # 0時-8時 (JST) = 15時-23時 (UTC前日), 0時-8時 (UTC)
+    - cron: '0 14-23 * * *' # 23時-翌8時 (JST)
+    - cron: '0 0-9 * * *' # 9時-18時 (JST) ※このうち0時のみが該当
   workflow_dispatch: # 手動実行も可能
 
 permissions:
@@ -26,48 +26,50 @@ jobs:
           # claude-code-requestedラベルがないものを優先
 
           # まず、claude-code-requestedラベルがない high priority issue を探す
-          ISSUE=$(gh issue list \
+          ISSUE_NUMBER=$(gh issue list \
             --repo ${{ github.repository }} \
             --label priority:high \
             --state open \
             --json number,title,labels \
-            --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | {number: .number, title: .title}')
+            --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | .number // empty')
 
           # なければ medium priority を探す
-          if [ "$ISSUE" = "null" ] || [ -z "$ISSUE" ]; then
-            ISSUE=$(gh issue list \
+          if [ -z "$ISSUE_NUMBER" ]; then
+            ISSUE_NUMBER=$(gh issue list \
               --repo ${{ github.repository }} \
               --label priority:medium \
               --state open \
               --json number,title,labels \
-              --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | {number: .number, title: .title}')
+              --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | .number // empty')
           fi
 
           # なければ low priority を探す
-          if [ "$ISSUE" = "null" ] || [ -z "$ISSUE" ]; then
-            ISSUE=$(gh issue list \
+          if [ -z "$ISSUE_NUMBER" ]; then
+            ISSUE_NUMBER=$(gh issue list \
               --repo ${{ github.repository }} \
               --label priority:low \
               --state open \
               --json number,title,labels \
-              --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | {number: .number, title: .title}')
+              --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | .number // empty')
           fi
 
           # なければ優先度ラベルなしのissueを探す
-          if [ "$ISSUE" = "null" ] || [ -z "$ISSUE" ]; then
-            ISSUE=$(gh issue list \
+          if [ -z "$ISSUE_NUMBER" ]; then
+            ISSUE_NUMBER=$(gh issue list \
               --repo ${{ github.repository }} \
               --state open \
               --json number,title,labels \
-              --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | {number: .number, title: .title}')
+              --jq '[.[] | select(.labels | map(.name) | contains(["claude-code-requested"]) | not)] | first | .number // empty')
           fi
 
-          if [ "$ISSUE" = "null" ] || [ -z "$ISSUE" ]; then
+          if [ -z "$ISSUE_NUMBER" ]; then
             echo "has_issue=false" >> $GITHUB_OUTPUT
             echo "対象のissueが見つかりませんでした"
           else
-            ISSUE_NUMBER=$(echo "$ISSUE" | jq -r '.number')
-            ISSUE_TITLE=$(echo "$ISSUE" | jq -r '.title')
+            ISSUE_TITLE=$(gh issue view $ISSUE_NUMBER \
+              --repo ${{ github.repository }} \
+              --json title \
+              --jq '.title')
             echo "has_issue=true" >> $GITHUB_OUTPUT
             echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
             echo "issue_title=$ISSUE_TITLE" >> $GITHUB_OUTPUT
