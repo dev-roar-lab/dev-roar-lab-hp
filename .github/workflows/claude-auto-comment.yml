@@ -83,7 +83,7 @@ jobs:
         run: |
           gh issue comment ${{ steps.get_issue.outputs.issue_number }} \
             --repo ${{ github.repository }} \
-            --body "@claude このissueに取り組んでください。変更差分がある場合はPRを作成してください。また、作成したPRのCIが通らない場合はその修正もしてください。"
+            --body "@claude このissueに取り組んでください。作業完了後は必ずPRを作成してください。PRのCIが失敗した場合は修正してください。"
 
       - name: Add claude-code-requested label
         if: steps.get_issue.outputs.has_issue == 'true'
