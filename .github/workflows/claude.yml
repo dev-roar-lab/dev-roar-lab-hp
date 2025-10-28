@@ -19,9 +19,9 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pull-requests: read
-      issues: read
+      contents: write # PRとブランチの作成に必要
+      pull-requests: write # PR作成・更新に必要
+      issues: write # Issue更新・コメントに必要
       id-token: write
       actions: read # Required for Claude to read CI results on PRs
     steps:
@@ -51,4 +51,4 @@ jobs:
           # Optional: Add claude_args to customize behavior and configuration
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.claude.com/en/docs/claude-code/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr:*)'
+          claude_args: '--allowed-tools Bash(gh issue:*) --allowed-tools Bash(gh pr:*) --allowed-tools Bash(git:*)'
