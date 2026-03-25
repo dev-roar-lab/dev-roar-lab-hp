@@ -72,6 +72,11 @@ Cleanup command before commit:
 rm playwright-screenshots/*.png
 ```
 
+## Requirements
+
+- **Node.js**: 20.x or higher
+- **npm**: 9.x or higher
+
 ## Development Commands
 
 ### Core Development
@@ -86,6 +91,8 @@ npm run verify-format    # Check code formatting with Prettier
 npm run ci               # Run full CI pipeline (format → lint → build)
 ```
 
+> **Postbuild**: After `next build`, `out/ja/index.html` is copied to `out/index.html` to serve the Japanese page at the S3 root.
+
 ### Testing
 
 ```bash
@@ -93,6 +100,8 @@ npm run ci               # Run full CI pipeline (format → lint → build)
 npm test                 # Run Vitest unit tests
 npm run test:ui          # Run tests in UI mode
 npm run test:coverage    # Run tests with coverage report
+npx vitest run src/features/posts/__tests__/parseFrontmatter.test.ts  # Run a single test file
+npx vitest run -t "test name"  # Run tests matching a pattern
 
 # E2E & Accessibility Tests (Playwright)
 npm run test:e2e         # Run all E2E tests
@@ -149,6 +158,11 @@ aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/
 ```
 
 ## Architecture Overview
+
+### Production Site
+
+- **URL**: https://www.dev-roar-lab.com
+- **Hosting**: AWS S3 + CloudFront (auto-deployed from `main` branch via GitHub Actions)
 
 ### Static Site Generation (SSG)
 
