@@ -47,7 +47,7 @@
         "details": "C#、JavaScriptを用いたWebアプリケーション開発、AWS (Terraform、CodePipeline) を活用したインフラ構築・CI/CD環境整備、顧客の内製化支援を担当"
       },
       "currentPosition": {
-        "period": "2023年2月〜現在",
+        "period": "2023年2月〜2026年2月",
         "role": "金融系IT企業のシステムマネージャーとして従事",
         "details": "私設取引システム(PTS)およびセキュリティトークン市場のシステム開発部に配属。Python、TypeScript、Next.jsを用いた外部向けのWebシステムおよびバックオフィス業務用のシステム開発を担当。DevContainer、テスト基盤(pytest)、CI/CD構築による品質保証を主導"
       },
